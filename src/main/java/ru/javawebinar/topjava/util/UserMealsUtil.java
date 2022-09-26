@@ -27,50 +27,33 @@ public class UserMealsUtil {
 
         System.out.println(filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
         System.out.println(filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
-//        System.out.println(filteredByCyclesOptional(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
-//        System.out.println(filteredByStreamsOptional(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-
-        // Люди ищут решение домашки на staskoverflow ))
-        // https://ru.stackoverflow.com/questions/1174993/Как-сделать-суммирование-вводимых-в-hashmap-значений-java
-        // Жалко, что я наткнулся на эту ссылку уже после того, как сам разобрался. Хотя наверно так даже лучше.
+        Objects.requireNonNull(meals, "Meals list must not be null");
 
         List<UserMealWithExcess> resultList = new ArrayList<>();
-        if (meals == null) {
-            return resultList;
-        }
-
         Map<LocalDate, Integer> caloriesPerDayMap = new HashMap<>();
-        meals.forEach(meal -> {
-            caloriesPerDayMap.merge(
-                    meal.getDateTime().toLocalDate(),
-                    meal.getCalories(),
-                    Integer::sum);
+        meals.forEach(meal -> caloriesPerDayMap.merge(
+                meal.getDateTime().toLocalDate(),
+                meal.getCalories(),
+                Integer::sum));
 
-            // такой вариант решения потребовал добавить сеттер для поля excess в UserMealWithExcess
-            // можно реализовать используя только конструктор, но тогда это сравнение надо будет вынести отсюда
-            // и придется повторно проходить по всему meals, а не только по отобранному списку resultList
+        meals.forEach(meal -> {
             if (isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
                 resultList.add(new UserMealWithExcess(
                         meal.getDateTime(),
                         meal.getDescription(),
                         meal.getCalories(),
-                        false));
-
+                        caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay));
             }
         });
-
-        resultList.forEach(meal -> meal.setExcess(caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay));
 
         return resultList;
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        if (meals == null) {
-            return new ArrayList<>();
-        }
+        Objects.requireNonNull(meals, "Meals list must not be null");
 
         Map<LocalDate, Integer> caloriesPerDayMap = meals.stream()
                 .collect(Collectors.toMap(
