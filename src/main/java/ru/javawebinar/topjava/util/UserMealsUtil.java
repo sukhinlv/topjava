@@ -85,22 +85,15 @@ public class UserMealsUtil {
                     meal.getDateTime().toLocalDate(),
                     unused -> new SimpleEntry<>(new AtomicBoolean(false), 0));
 
-            int caloriesOldValue = excessCaloriesEntry.getValue();
-            int caloriesNewValue = caloriesOldValue + meal.getCalories();
-            excessCaloriesEntry.setValue(caloriesNewValue);
-
-            boolean isCaloriesExcess = caloriesNewValue > caloriesPerDay;
-            AtomicBoolean caloriesExcessValue = excessCaloriesEntry.getKey();
-            if (caloriesOldValue <= caloriesPerDay && isCaloriesExcess) {
-                caloriesExcessValue.set(true);
-            }
+            excessCaloriesEntry.setValue(excessCaloriesEntry.getValue() + meal.getCalories());
+            excessCaloriesEntry.getKey().set(excessCaloriesEntry.getValue() > caloriesPerDay);
 
             if (isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
                 resultList.add(new UserMealWithExcess(
                         meal.getDateTime(),
                         meal.getDescription(),
                         meal.getCalories(),
-                        caloriesExcessValue));
+                        excessCaloriesEntry.getKey()));
             }
         });
 
