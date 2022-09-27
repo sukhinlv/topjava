@@ -85,20 +85,17 @@ public class UserMealsUtil {
                                     meal.getDateTime().toLocalDate(),
                                     unused -> new SimpleEntry<>(new ArrayList<>(), 0));
 
-                            int caloriesOldValue = mealsCaloriesEntry.getValue();
-                            int caloriesNewValue = caloriesOldValue + meal.getCalories();
-                            mealsCaloriesEntry.setValue(caloriesNewValue);
+                            mealsCaloriesEntry.setValue(mealsCaloriesEntry.getValue() + meal.getCalories());
 
-                            List<UserMeal> mealList = mealsCaloriesEntry.getKey();
                             if (isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
-                                mealList.add(meal);
+                                mealsCaloriesEntry.getKey().add(meal);
                             }
                         },
                         (dateCaloriesMealsEntryMap, combinedDateCaloriesMealsEntryMap) ->
                                 combinedDateCaloriesMealsEntryMap.forEach((date, mealsCaloriesEntry) ->
                                         dateCaloriesMealsEntryMap.merge(date, mealsCaloriesEntry, (entry, combinedEntry) -> {
                                             entry.setValue(entry.getValue() + combinedEntry.getValue());
-                                            combinedEntry.getKey().forEach(meal -> entry.getKey().add(meal));
+                                            entry.getKey().addAll(combinedEntry.getKey());
                                             return entry;
                                         })))
                 .values().stream()
