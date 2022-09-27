@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,6 @@ public class UserMealsUtil {
                         meal.getDescription(),
                         meal.getCalories(),
                         caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay));
-
             }
         });
 
@@ -77,31 +77,38 @@ public class UserMealsUtil {
     public static List<UserMealWithExcess> filteredByStreamsOptional(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Objects.requireNonNull(meals, "Meals must not be null");
 
-        return meals.stream()
+        return meals.stream().parallel()
                 .collect(
-                        () -> new HashMap<LocalDate, Pair<Integer, List<UserMeal>>>(),
-                        (list, meal) -> {
-                            Pair<Integer, List<UserMeal>> pairCaloriesMeals = list.computeIfAbsent(
+                        () -> new HashMap<LocalDate, SimpleEntry<List<UserMeal>, Integer>>(),
+                        (dateCaloriesMealsEntryMap, meal) -> {
+                            SimpleEntry<List<UserMeal>, Integer> mealsCaloriesEntry = dateCaloriesMealsEntryMap.computeIfAbsent(
                                     meal.getDateTime().toLocalDate(),
-                                    unused -> new Pair<>(0, new ArrayList<>()));
+                                    unused -> new SimpleEntry<>(new ArrayList<>(), 0));
 
-                            int caloriesOldValue = pairCaloriesMeals.getArgA();
-                            List<UserMeal> mealList = pairCaloriesMeals.getArgB();
+                            int caloriesOldValue = mealsCaloriesEntry.getValue();
                             int caloriesNewValue = caloriesOldValue + meal.getCalories();
+                            mealsCaloriesEntry.setValue(caloriesNewValue);
 
-                            pairCaloriesMeals.setArgA(caloriesNewValue);
+                            List<UserMeal> mealList = mealsCaloriesEntry.getKey();
                             if (isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
                                 mealList.add(meal);
                             }
                         },
-                        HashMap::putAll)
-                .values().stream().flatMap(caloriesMealsList ->
-                        caloriesMealsList.getArgB().stream()
+                        (dateCaloriesMealsEntryMap, combinedDateCaloriesMealsEntryMap) ->
+                                combinedDateCaloriesMealsEntryMap.forEach((date, mealsCaloriesEntry) ->
+                                        dateCaloriesMealsEntryMap.merge(date, mealsCaloriesEntry, (entry, combinedEntry) -> {
+                                            entry.setValue(entry.getValue() + combinedEntry.getValue());
+                                            combinedEntry.getKey().forEach(meal -> entry.getKey().add(meal));
+                                            return entry;
+                                        })))
+                .values().stream()
+                .flatMap(mealsCaloriesEntry ->
+                        mealsCaloriesEntry.getKey().stream()
                                 .map(meal -> new UserMealWithExcess(
                                         meal.getDateTime(),
                                         meal.getDescription(),
                                         meal.getCalories(),
-                                        caloriesMealsList.getArgA() > caloriesPerDay)))
+                                        mealsCaloriesEntry.getValue() > caloriesPerDay)))
                 .collect(Collectors.toList());
     }
 }
