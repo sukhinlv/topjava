@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.TimeUtil.isBetweenHalfOpen;
@@ -46,7 +48,7 @@ public class UserMealsUtil {
                         meal.getDateTime(),
                         meal.getDescription(),
                         meal.getCalories(),
-                        new BooleanValue(caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)));
+                        new AtomicBoolean(caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)));
             }
         });
 
@@ -69,7 +71,7 @@ public class UserMealsUtil {
                         meal.getDateTime(),
                         meal.getDescription(),
                         meal.getCalories(),
-                        new BooleanValue(caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)))
+                        new AtomicBoolean(caloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)))
                 .collect(Collectors.toList());
     }
 
@@ -77,21 +79,20 @@ public class UserMealsUtil {
         Objects.requireNonNull(meals, "Meals list must not be null");
 
         List<UserMealWithExcess> resultList = new ArrayList<>();
-        Map<LocalDate, Pair<Integer, BooleanValue>> caloriesPerDayAndExcessMap = new HashMap<>();
+        Map<LocalDate, SimpleEntry<AtomicBoolean, Integer>> dateExcessCaloriesEntryMap = new HashMap<>();
         meals.forEach(meal -> {
-            Pair<Integer, BooleanValue> pairCaloriesAndExcess = caloriesPerDayAndExcessMap.computeIfAbsent(
+            SimpleEntry<AtomicBoolean, Integer> excessCaloriesEntry = dateExcessCaloriesEntryMap.computeIfAbsent(
                     meal.getDateTime().toLocalDate(),
-                    unused -> new Pair<>(0, new BooleanValue(false)));
+                    unused -> new SimpleEntry<>(new AtomicBoolean(false), 0));
 
-            int caloriesOldValue = pairCaloriesAndExcess.getArgA();
+            int caloriesOldValue = excessCaloriesEntry.getValue();
             int caloriesNewValue = caloriesOldValue + meal.getCalories();
+            excessCaloriesEntry.setValue(caloriesNewValue);
+
             boolean isCaloriesExcess = caloriesNewValue > caloriesPerDay;
-
-            pairCaloriesAndExcess.setArgA(caloriesNewValue);
-
-            BooleanValue caloriesExcessValue = pairCaloriesAndExcess.getArgB();
+            AtomicBoolean caloriesExcessValue = excessCaloriesEntry.getKey();
             if (caloriesOldValue <= caloriesPerDay && isCaloriesExcess) {
-                caloriesExcessValue.setValue(true);
+                caloriesExcessValue.set(true);
             }
 
             if (isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
