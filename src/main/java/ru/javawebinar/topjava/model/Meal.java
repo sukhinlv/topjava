@@ -8,9 +8,7 @@ public class Meal {
     public static final Meal EMPTY = new Meal();
     private Integer id;
     private LocalDateTime dateTime;
-
     private String description;
-
     private int calories;
 
     public Meal() {
