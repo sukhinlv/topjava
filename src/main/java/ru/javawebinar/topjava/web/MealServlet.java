@@ -18,8 +18,9 @@ import java.util.Optional;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(MealServlet.class);
-    private static final int CALORIES_PER_DAY = 2000;
+    private final Logger log = getLogger(MealServlet.class);
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int CALORIES_PER_DAY = 2000;
     private Storage<Meal, Integer> storage;
 
     @Override

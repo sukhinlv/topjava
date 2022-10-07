@@ -17,7 +17,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealArrayStorage implements Storage<Meal, Integer> {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private final AtomicInteger idCounter;
-    private static final Logger log = getLogger(MealArrayStorage.class);
+    private final Logger log = getLogger(MealArrayStorage.class);
 
     private MealArrayStorage() {
         // TODO remove hardcoded storage initialization
