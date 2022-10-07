@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="ru">
 <head>
@@ -13,7 +13,7 @@
 <section>
     <p>${meal.description}&nbsp;<a href="meals?id=${meal.id}&action=edit"><img src="<c:url value='/img/pencil.png'/>"
                                                                                alt="edit"></a></p>
-    <p>${meal.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</p>
+    <p>${meal.dateTime.format(TimeUtil.DATE_TIME_FORMATTER)}</p>
     <p>${meal.calories}</p>
     <button onclick="window.history.back()">Back</button>
 </section>
