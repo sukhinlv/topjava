@@ -23,7 +23,7 @@
         <jsp:useBean id="mealsTo" scope="request" type="java.util.List"/>
         <c:forEach items="${mealsTo}" var="mealTo">
             <tr class="${mealTo.excess ? 'excess' : 'notexcess'}">
-                <td>${mealTo.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</td>
+                <td><a href="meals?id=${mealTo.id}&action=view">${mealTo.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</a></td>
                 <td>${mealTo.description}</td>
                 <td>${mealTo.calories}</td>
                 <td><a href="meals?id=${mealTo.id}&action=delete"><img src="<c:url value='/img/delete.png'/>" alt="delete"></a></td>
