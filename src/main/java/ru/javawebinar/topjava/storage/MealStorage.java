@@ -64,7 +64,7 @@ public class MealStorage implements Storage<Meal, Integer> {
     public void save(Meal entity) {
         // TODO: implement save()
         Integer newId = idCounter.incrementAndGet();
-        Meal newMeal = new Meal(entity.getDateTime(), entity.getDescription(), entity.getCalories());
+        Meal newMeal = new Meal(idCounter.get(), entity.getDateTime(), entity.getDescription(), entity.getCalories());
         storage.put(newId, newMeal);
     }
 }
