@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.javawebinar.topjava.util.TimeUtil.DATE_TIME_FORMATTER;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
@@ -32,27 +32,29 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
 
-        int id = getIntFromString(request.getParameter("id"));
-        LocalDateTime dateTime = getDateTimeFromString(request.getParameter("dateTime"));
+        log.debug("parse request parameters");
+        int id = getIdFromString(request.getParameter("id"));
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
-        int calories = getIntFromString(request.getParameter("calories"));
+        int calories = Integer.parseInt(request.getParameter("calories"));
 
         Meal meal;
         if (id == -1) {
             meal = new Meal(dateTime, description, calories);
         } else {
-            meal = storage.findById(id).get();
+            Optional<Meal> mealOptional = storage.findById(id);
+            if (!mealOptional.isPresent()) {
+                throw new IllegalArgumentException(String.format("Meal with id = %d is not exist", id));
+            }
+            meal = mealOptional.get();
             meal.setDateTime(dateTime);
             meal.setDescription(description);
             meal.setCalories(calories);
         }
 
         storage.save(meal);
-        response.sendRedirect("resume");
-    }
-
-    private static LocalDateTime getDateTimeFromString(String dateTime) {
-        return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
+        log.debug("redirect to meals list");
+        response.sendRedirect("meals");
     }
 
     @Override
@@ -61,7 +63,8 @@ public class MealServlet extends HttpServlet {
         LocalTime startTime = LocalTime.of(0, 0);
         LocalTime endTime = LocalTime.of(23, 59);
 
-        Integer id = getIntFromString(request.getParameter("id"));
+        log.debug("parse request parameters");
+        Integer id = getIdFromString(request.getParameter("id"));
         String action = request.getParameter("action");
         Meal meal;
         if (action == null) {
@@ -87,7 +90,7 @@ public class MealServlet extends HttpServlet {
         request.getRequestDispatcher(("view".equals(action) ? "mealView.jsp" : "mealEdit.jsp")).forward(request, response);
     }
 
-    private static int getIntFromString(String idParam) {
+    private static int getIdFromString(String idParam) {
         return (idParam == null) ? -1 : Integer.parseInt(idParam);
     }
 }
