@@ -10,6 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class MealsStorage implements Storage<Meal, Integer> {
+
+    private MealsStorage() {
+    }
+
+    private static class MealsStorageHolder {
+        public static final MealsStorage INSTANCE = new MealsStorage();
+    }
+
+    public static MealsStorage getInstance() {
+        return MealsStorageHolder.INSTANCE;
+    }
+
     @Override
     public void deleteAll() {
         // TODO: implement deleteAll()
