@@ -32,13 +32,14 @@ public class MealServlet extends HttpServlet {
         LocalTime startTime = LocalTime.of(0, 0);
         LocalTime endTime = LocalTime.of(23, 59);
 
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        Integer id = idParam == null ? -1 : Integer.parseInt(idParam);
         String action = request.getParameter("action");
         Meal meal;
         if (action == null) {
             request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
             log.debug("redirect to meals list with action=null");
-            request.getRequestDispatcher("meals.jsp").forward(request, response);
+            request.getRequestDispatcher("mealsList.jsp").forward(request, response);
             return;
         } else if (action.equals("delete")) {
             storage.deleteById(id);
@@ -55,6 +56,6 @@ public class MealServlet extends HttpServlet {
 
         request.setAttribute("meal", meal);
         log.debug("redirect to meals edit/view with action={}", action);
-        request.getRequestDispatcher(("view".equals(action) ? "/WEB-INF/mealView.jsp" : "/WEB-INF/mealEdit.jsp")).forward(request, response);
+        request.getRequestDispatcher(("view".equals(action) ? "mealView.jsp" : "mealEdit.jsp")).forward(request, response);
     }
 }

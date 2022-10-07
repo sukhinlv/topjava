@@ -26,8 +26,8 @@
                 <td>${mealTo.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</td>
                 <td>${mealTo.description}</td>
                 <td>${mealTo.calories}</td>
-                <td><img src="<c:url value='/img/delete.png'/>" alt="delete"></td>
-                <td><img src="<c:url value='/img/pencil.png'/>" alt="edit"></td>
+                <td><a href="meals?id=${mealTo.id}&action=delete"><img src="<c:url value='/img/delete.png'/>" alt="delete"></a></td>
+                <td><a href="meals?id=${mealTo.id}&action=edit"><img src="<c:url value='/img/pencil.png'/>" alt="edit"></a></td>
             </tr>
         </c:forEach>
     </table>
