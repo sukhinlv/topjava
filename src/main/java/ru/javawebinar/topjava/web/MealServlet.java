@@ -91,6 +91,6 @@ public class MealServlet extends HttpServlet {
     }
 
     private static int getIdFromString(String idParam) {
-        return (idParam == null) ? -1 : Integer.parseInt(idParam);
+        return ((idParam == null) || idParam.isEmpty()) ? -1 : Integer.parseInt(idParam);
     }
 }
