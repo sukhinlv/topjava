@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MealStorage implements Storage<Meal, Integer> {
+public class MealArrayStorage implements Storage<Meal, Integer> {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private final AtomicInteger idCounter;
-    private static final Logger log = getLogger(MealStorage.class);
+    private static final Logger log = getLogger(MealArrayStorage.class);
 
-    private MealStorage() {
+    private MealArrayStorage() {
         // TODO remove hardcoded storage initialization
         storage.put(1, new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
         storage.put(2, new Meal(2, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
@@ -32,10 +32,10 @@ public class MealStorage implements Storage<Meal, Integer> {
     }
 
     private static class MealsStorageHolder {
-        public static final MealStorage INSTANCE = new MealStorage();
+        public static final MealArrayStorage INSTANCE = new MealArrayStorage();
     }
 
-    public static MealStorage getInstance() {
+    public static MealArrayStorage getInstance() {
         return MealsStorageHolder.INSTANCE;
     }
 
