@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.util;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
@@ -9,9 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MealsUtil {
 
+    private static final Logger log = getLogger(MealsUtil.class);
+
     public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        log.debug("convert meals list to mealsTo list");
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
