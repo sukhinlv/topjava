@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,13 +27,13 @@ public class MealServlet extends HttpServlet {
     public void init() {
         storage = new MealMemoryStorage();
         // TODO remove hardcoded storage initialization
-        storage.save(new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
-        storage.save(new Meal(2, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
-        storage.save(new Meal(3, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
-        storage.save(new Meal(4, LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
-        storage.save(new Meal(5, LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
-        storage.save(new Meal(6, LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
-        storage.save(new Meal(7, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        storage.save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
     @Override
@@ -42,23 +41,15 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         log.debug("parse request parameters");
-        int id = getIdFromString(request.getParameter("id"));
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
-
+        String paramId = request.getParameter("id");
         Meal meal;
-        if (id == -1) {
+        if (paramId == null || paramId.isEmpty()) {
             meal = new Meal(dateTime, description, calories);
         } else {
-            Optional<Meal> mealOptional = storage.findById(id);
-            if (!mealOptional.isPresent()) {
-                throw new IllegalArgumentException(String.format("Meal with id = %d is not exist", id));
-            }
-            meal = mealOptional.get();
-            meal.setDateTime(dateTime);
-            meal.setDescription(description);
-            meal.setCalories(calories);
+            meal = new Meal(Integer.parseInt(paramId), dateTime, description, calories);
         }
 
         storage.save(meal);
@@ -69,29 +60,35 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // TODO: remove hardcoded time
-        LocalTime startTime = LocalTime.of(0, 0);
-        LocalTime endTime = LocalTime.of(23, 59);
+        LocalTime startTime = LocalTime.MIN;
+        LocalTime endTime = LocalTime.MAX;
 
         log.debug("parse request parameters");
-        Integer id = getIdFromString(request.getParameter("id"));
         String action = request.getParameter("action");
         Meal meal;
         if (action == null) {
-            request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
-            log.debug("redirect to meals list with action=null");
-            request.getRequestDispatcher("mealsList.jsp").forward(request, response);
+            redirectToMealsList(request, response, startTime, endTime);
             return;
-        } else if (action.equals("delete")) {
-            storage.deleteById(id);
-            log.debug("redirect to meals list with action=delete");
-            response.sendRedirect("meals");
-            return;
-        } else if (action.equals("view") || action.equals("edit")) {
-            meal = storage.findById(id).orElse(MealsUtil.EMPTY);
-        } else if (action.equals("new")) {
-            meal = MealsUtil.EMPTY;
-        } else {
-            throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+        int id;
+        switch (action) {
+            case "delete":
+                id = Integer.parseInt(request.getParameter("id"));
+                storage.deleteById(id);
+                log.debug("redirect to meals list with action=delete");
+                response.sendRedirect("meals");
+                return;
+            case "view":
+            case "edit":
+                id = Integer.parseInt(request.getParameter("id"));
+                meal = storage.findById(id).orElseThrow(() -> new IllegalArgumentException(String.format("Meal with id = %d not found", id)));
+                break;
+            case "new":
+                meal = MealsUtil.EMPTY;
+                break;
+            default:
+                redirectToMealsList(request, response, startTime, endTime);
+                return;
         }
 
         request.setAttribute("meal", meal);
@@ -99,7 +96,9 @@ public class MealServlet extends HttpServlet {
         request.getRequestDispatcher(("view".equals(action) ? "mealView.jsp" : "mealEdit.jsp")).forward(request, response);
     }
 
-    private static int getIdFromString(String idParam) {
-        return ((idParam == null) || idParam.isEmpty()) ? -1 : Integer.parseInt(idParam);
+    private void redirectToMealsList(HttpServletRequest request, HttpServletResponse response, LocalTime startTime, LocalTime endTime) throws ServletException, IOException {
+        request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
+        log.debug("redirect to meals list with action=null");
+        request.getRequestDispatcher("mealsList.jsp").forward(request, response);
     }
 }
