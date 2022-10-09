@@ -79,9 +79,9 @@ public class MealServlet extends HttpServlet {
             response.sendRedirect("meals");
             return;
         } else if (action.equals("view") || action.equals("edit")) {
-            meal = storage.findById(id).orElse(Meal.EMPTY);
+            meal = storage.findById(id).orElse(MealsUtil.EMPTY);
         } else if (action.equals("new")) {
-            meal = Meal.EMPTY;
+            meal = MealsUtil.EMPTY;
         } else {
             throw new IllegalArgumentException("Action " + action + " is illegal");
         }

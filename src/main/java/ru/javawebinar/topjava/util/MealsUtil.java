@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealsUtil {
 
     private static final Logger log = getLogger(MealsUtil.class);
+    public static final Meal EMPTY = new Meal(LocalDateTime.now(), "", 0);
+
 
     public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         log.debug("convert meals list to mealsTo list");
@@ -29,6 +32,8 @@ public class MealsUtil {
                 .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
     }
+
+
 
     private static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);

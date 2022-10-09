@@ -66,7 +66,7 @@ public class MealArrayStorage implements Storage<Meal, Integer> {
 
     @Override
     public void save(Meal entity) {
-        Integer newId = (entity.getId() <= 0) ? idCounter.incrementAndGet() : entity.getId();
+        Integer newId = (entity.getId() == null) ? idCounter.incrementAndGet() : entity.getId();
         Meal newMeal = new Meal(newId, entity.getDateTime(), entity.getDescription(), entity.getCalories());
         log.debug("save meal {}", newMeal);
         storage.put(newId, newMeal);
