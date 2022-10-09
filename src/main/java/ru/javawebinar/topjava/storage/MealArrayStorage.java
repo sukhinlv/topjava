@@ -40,12 +40,6 @@ public class MealArrayStorage implements Storage<Meal, Integer> {
     }
 
     @Override
-    public void deleteAll() {
-        log.debug("deleteAll");
-        storage.clear();
-    }
-
-    @Override
     public void deleteById(Integer id) {
         log.debug("deleteById {}", id);
         storage.remove(id);
@@ -65,10 +59,10 @@ public class MealArrayStorage implements Storage<Meal, Integer> {
     }
 
     @Override
-    public void save(Meal entity) {
+    public Meal save(Meal entity) {
         Integer newId = (entity.getId() == null) ? idCounter.incrementAndGet() : entity.getId();
         Meal newMeal = new Meal(newId, entity.getDateTime(), entity.getDescription(), entity.getCalories());
         log.debug("save meal {}", newMeal);
-        storage.put(newId, newMeal);
+        return storage.put(newId, newMeal);
     }
 }
