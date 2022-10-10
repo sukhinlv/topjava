@@ -1,6 +1,5 @@
 <%--suppress HtmlFormInputWithoutLabel --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="ru">
@@ -18,7 +17,7 @@
         <dl>
             <dt>Date / time:</dt>
             <dd><input type="datetime-local" name="dateTime" id="dateTime" size=50
-                       value="${meal.dateTime.format(TimeUtil.DATE_TIME_FORMATTER_FOR_BROWSER)}" autofocus required></dd>
+                       value="${meal.dateTime}" autofocus required></dd>
         </dl>
         <dl>
             <dt>Description:</dt>

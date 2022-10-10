@@ -18,10 +18,10 @@ import java.time.LocalTime;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private final Logger log = getLogger(MealServlet.class);
     @SuppressWarnings("FieldCanBeLocal")
     // TODO: remove hardcoded caloriesPerDay
     private static final int CALORIES_PER_DAY = 2000;
+    private final Logger log = getLogger(MealServlet.class);
     private Storage<Meal, Integer> storage;
 
     @Override
@@ -61,7 +61,7 @@ public class MealServlet extends HttpServlet {
         Meal meal;
         switch (action == null ? "noAction" : action) {
             case "new":
-                meal = MealsUtil.emptyMeal;
+                meal = MealsUtil.emptyMeal();
                 break;
             case "view":
             case "edit":
@@ -71,7 +71,9 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 storage.deleteById(getId(request));
             default:
-                redirectToMealsList(request, response, startTime, endTime);
+                request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
+                log.debug("redirect to meals list");
+                request.getRequestDispatcher("mealsList.jsp").forward(request, response);
                 return;
         }
 
@@ -82,11 +84,5 @@ public class MealServlet extends HttpServlet {
 
     private static int getId(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter("id"));
-    }
-
-    private void redirectToMealsList(HttpServletRequest request, HttpServletResponse response, LocalTime startTime, LocalTime endTime) throws ServletException, IOException {
-        request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
-        log.debug("redirect to meals list");
-        request.getRequestDispatcher("mealsList.jsp").forward(request, response);
     }
 }

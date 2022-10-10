@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.storage;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 
 public class MemoryMealStorage implements Storage<Meal, Integer> {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
@@ -53,9 +55,14 @@ public class MemoryMealStorage implements Storage<Meal, Integer> {
 
     @Override
     public Meal save(Meal entity) {
-        int newId = (entity.getId() == null) ? idCounter.incrementAndGet() : entity.getId();
-        Meal newMeal = new Meal(newId, entity.getDateTime(), entity.getDescription(), entity.getCalories());
-        log.debug("save meal {}", newMeal);
-        return storage.merge(newId, newMeal, (mealIn, mealOut) -> mealOut);
+        log.debug("save meal {}", entity);
+        if (entity.getId() != null) {
+            Meal updatedMeal = storage.computeIfPresent(entity.getId(), (id, meal) -> getMealFromEntityAndId(entity, id));
+            if (updatedMeal != null) {
+                return updatedMeal;
+            }
+        }
+        Meal newMeal = getMealFromEntityAndId(entity, idCounter.incrementAndGet());
+        return storage.put(newMeal.getId(), newMeal);
     }
 }

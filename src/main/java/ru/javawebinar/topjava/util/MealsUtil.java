@@ -15,7 +15,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealsUtil {
     private static final Logger log = getLogger(MealsUtil.class);
-    public static final Meal emptyMeal = new Meal(LocalDateTime.now(), "", 0);
+    public static Meal emptyMeal() {
+        return new Meal(LocalDateTime.now(), "", 0);
+    }
+
+    public static Meal getMealFromEntityAndId(Meal entity, Integer id) {
+        return new Meal(id, entity.getDateTime(), entity.getDescription(), entity.getCalories());
+    }
 
     public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         log.debug("convert meals list to mealsTo list");
