@@ -32,8 +32,7 @@ public class MealTo {
         return calories;
     }
 
-    @SuppressWarnings("unused")
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

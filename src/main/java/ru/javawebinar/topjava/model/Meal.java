@@ -28,10 +28,6 @@ public class Meal {
         return calories;
     }
 
-    public void setCalories(int calories) {
-        this.calories = calories;
-    }
-
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -40,25 +36,16 @@ public class Meal {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDate getDate() {
         return dateTime.toLocalDate();
     }
 
-    @SuppressWarnings("unused")
     public Integer getId() {
         return id;
     }
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
     }
 
     @Override
