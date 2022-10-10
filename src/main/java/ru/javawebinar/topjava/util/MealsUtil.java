@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.model.MealTo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,8 +16,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealsUtil {
     private static final Logger log = getLogger(MealsUtil.class);
+
     public static Meal emptyMeal() {
-        return new Meal(LocalDateTime.now(), "", 0);
+        return new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0);
     }
 
     public static Meal getMealFromEntityAndId(Meal entity, Integer id) {

@@ -52,10 +52,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        // TODO: remove hardcoded time
-        LocalTime startTime = LocalTime.MIN;
-        LocalTime endTime = LocalTime.MAX;
-
         log.debug("parse request parameters");
         String action = request.getParameter("action");
         Meal meal;
@@ -70,8 +66,11 @@ public class MealServlet extends HttpServlet {
                 break;
             case "delete":
                 storage.deleteById(getId(request));
+                response.sendRedirect("meals");
+                return;
             default:
-                request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), startTime, endTime, CALORIES_PER_DAY));
+                // TODO: remove hardcoded time
+                request.setAttribute("mealsTo", MealsUtil.filteredByStreams(storage.findAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
                 log.debug("redirect to meals list");
                 request.getRequestDispatcher("mealsList.jsp").forward(request, response);
                 return;

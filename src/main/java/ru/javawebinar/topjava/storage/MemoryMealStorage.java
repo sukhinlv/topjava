@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.storage;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -11,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.javawebinar.topjava.util.MealsUtil.*;
+import static ru.javawebinar.topjava.util.MealsUtil.getMealFromEntityAndId;
 
 public class MemoryMealStorage implements Storage<Meal, Integer> {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
@@ -57,12 +56,10 @@ public class MemoryMealStorage implements Storage<Meal, Integer> {
     public Meal save(Meal entity) {
         log.debug("save meal {}", entity);
         if (entity.getId() != null) {
-            Meal updatedMeal = storage.computeIfPresent(entity.getId(), (id, meal) -> getMealFromEntityAndId(entity, id));
-            if (updatedMeal != null) {
-                return updatedMeal;
-            }
+            return storage.computeIfPresent(entity.getId(), (id, meal) -> getMealFromEntityAndId(entity, id));
         }
         Meal newMeal = getMealFromEntityAndId(entity, idCounter.incrementAndGet());
-        return storage.put(newMeal.getId(), newMeal);
+        storage.put(newMeal.getId(), newMeal);
+        return newMeal;
     }
 }
