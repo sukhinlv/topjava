@@ -28,7 +28,8 @@ public class InMemoryMealRepository implements MealRepository {
             return meal;
         }
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal.getUserId() == authUserId ? meal : null);
+        return repository.computeIfPresent(meal.getId(),
+                (id, oldMeal) -> meal.getUserId() == authUserId && oldMeal.getUserId() == authUserId ? meal : null);
     }
 
     @Override
