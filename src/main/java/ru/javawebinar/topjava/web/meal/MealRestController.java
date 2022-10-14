@@ -2,13 +2,14 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -20,12 +21,21 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private MealService service;
+    private final MealService service;
+
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
     public List<MealTo> getAll() {
+        return getAll(null, null, null, null);
+    }
+
+    public List<MealTo> getAll(LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
         log.info("getAll");
-        return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
+        return MealsUtil.getFilteredTos(
+                service.getAll(authUserId(), fromDate, toDate),
+                authUserCaloriesPerDay(), fromTime, toTime);
     }
 
     public Meal get(int id) {

@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,10 +46,12 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAll(int authUserId) {
-        // https://stackoverflow.com/questions/62392699/sort-list-by-localdate-descending-and-localtime-ascending
+    public List<Meal> getAll(int authUserId, LocalDate fromDate, LocalDate toDate) {
         return repository.values().stream()
-                .filter(meal -> meal.getUserId() == authUserId)
+                .filter(meal -> (
+                        meal.getUserId() == authUserId) &&
+                        (fromDate == null || (meal.getDate().compareTo(fromDate) >= 0)) &&
+                        (toDate == null || (meal.getDate().compareTo(toDate) <= 0)))
                 .sorted(Comparator
                         .comparing(Meal::getDate)
                         .reversed()
