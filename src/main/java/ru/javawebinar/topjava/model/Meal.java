@@ -25,14 +25,6 @@ public class Meal extends AbstractBaseEntity {
         this.userId = userId;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public int getUserId() {
         return userId;
     }
