@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 public class MealServlet extends HttpServlet {
@@ -41,18 +42,19 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
+        String description = request.getParameter("description");
+        int calories = Integer.parseInt(request.getParameter("calories"));
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")), authUserId());
-
-        if (meal.isNew()) {
-            log.info("Create {}", meal);
-            mealRestController.create(meal);
+        if (isEmpty(id)) {
+            Meal newMeal = new Meal(null, dateTime, description, calories, authUserId());
+            log.info("Create {}", newMeal);
+            mealRestController.create(newMeal);
         } else {
-            log.info("Update {}", meal);
-            mealRestController.update(meal, meal.getId());
+            Meal updatedMeal = mealRestController.get(Integer.parseInt(id));
+            Meal newMeal = new Meal(updatedMeal.getId(), dateTime, description, calories, updatedMeal.getUserId());
+            log.info("Update {}", newMeal);
+            mealRestController.update(newMeal, newMeal.getId());
         }
 
         response.sendRedirect("meals");
@@ -109,12 +111,12 @@ public class MealServlet extends HttpServlet {
 
     private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return paramValue != null && !paramValue.isEmpty() ? LocalDate.parse(paramValue) : null;
+        return isEmpty(paramValue) ? LocalDate.parse(paramValue) : null;
     }
 
     private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return paramValue != null && !paramValue.isEmpty() ? LocalTime.parse(paramValue) : null;
+        return isEmpty(paramValue) ? LocalTime.parse(paramValue) : null;
     }
 
     private int getId(HttpServletRequest request) {
