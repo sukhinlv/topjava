@@ -19,7 +19,7 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final MealService service;
 
@@ -27,11 +27,11 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<MealTo> getAll() {
-        return getAll(null, null, null, null);
+    public List<MealTo> getAllFiltered() {
+        return getAllFiltered(null, null, null, null);
     }
 
-    public List<MealTo> getAll(LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
+    public List<MealTo> getAllFiltered(LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
         log.info("getAll");
         return MealsUtil.getFilteredTos(
                 service.getAllFiltered(authUserId(), fromDate, toDate),

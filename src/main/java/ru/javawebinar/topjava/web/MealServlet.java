@@ -94,7 +94,7 @@ public class MealServlet extends HttpServlet {
         LocalTime fromTime = (LocalTime) request.getSession().getAttribute("fromTime");
         LocalDate toDate = (LocalDate) request.getSession().getAttribute("toDate");
         LocalTime toTime = (LocalTime) request.getSession().getAttribute("toTime");
-        request.setAttribute("meals", mealRestController.getAll(fromDate, fromTime, toDate, toTime));
+        request.setAttribute("meals", mealRestController.getAllFiltered(fromDate, fromTime, toDate, toTime));
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 
