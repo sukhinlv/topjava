@@ -49,12 +49,10 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAll(int authUserId, LocalDate fromDate, LocalDate toDate) {
         return repository.values().stream()
-                .filter(meal -> (
-                        meal.getUserId() == authUserId) &&
-                        (fromDate == null || (meal.getDate().compareTo(fromDate) >= 0)) &&
-                        (toDate == null || (meal.getDate().compareTo(toDate) <= 0)))
-                .sorted(Comparator
-                        .comparing(Meal::getDate)
+                .filter(meal -> meal.getUserId() == authUserId)
+                .filter(meal -> fromDate == null || meal.getDate().compareTo(fromDate) >= 0)
+                .filter(meal -> toDate == null || meal.getDate().compareTo(toDate) <= 0)
+                .sorted(Comparator.comparing(Meal::getDate)
                         .thenComparing(Meal::getTime)
                         .reversed())
                 .collect(Collectors.toList());
