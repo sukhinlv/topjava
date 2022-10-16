@@ -3,10 +3,14 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,8 +81,7 @@ public class InMemoryMealRepository implements MealRepository {
         repository.computeIfPresent(userId, (unused, userMeals) -> {
             resultMeal.set(userMeals.values().stream()
                     .filter(meal -> meal.getUserId() == userId)
-                    .filter(meal -> fromDate == null || meal.getDate().compareTo(fromDate) >= 0)
-                    .filter(meal -> toDate == null || meal.getDate().compareTo(toDate) <= 0)
+                    .filter(meal -> DateTimeUtil.isBetweenClosed(meal.getDate(), fromDate, toDate == null ? null : toDate.plusDays(1)))
                     .sorted(Comparator.comparing(Meal::getDate)
                             .thenComparing(Meal::getTime)
                             .reversed())
