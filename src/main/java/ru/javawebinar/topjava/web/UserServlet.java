@@ -15,7 +15,7 @@ public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getParameter("action");
 
         if (action != null && action.equals("logUser")) {
@@ -23,9 +23,11 @@ public class UserServlet extends HttpServlet {
             log.info("Log user with id={}", loggedUser);
             setAuthUserId(loggedUser);
             response.sendRedirect("meals");
-            return;
         }
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to users");
         request.getRequestDispatcher("/users.jsp").forward(request, response);
     }
