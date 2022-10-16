@@ -21,35 +21,40 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Meal save(Meal meal, int authUserId) {
+    public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(authUserId);
+            meal.setUserId(userId);
             repository.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
         Meal updatedMeal = repository.computeIfPresent(meal.getId(),
-                (id, oldMeal) -> meal.getUserId() == authUserId && oldMeal.getUserId() == authUserId ? meal : oldMeal);
-        return (updatedMeal != null && updatedMeal.getUserId() == authUserId) ? updatedMeal : null;
+                (id, oldMeal) -> meal.getUserId() == userId && oldMeal.getUserId() == userId ? meal : oldMeal);
+        return (updatedMeal != null && updatedMeal.getUserId() == userId) ? updatedMeal : null;
     }
 
     @Override
-    public boolean delete(int id, int authUserId) {
+    public boolean delete(int id, int userId) {
         Meal meal = repository.get(id);
-        return (meal != null && meal.getUserId() != authUserId) ? false : repository.remove(id) != null;
+        return (meal != null && meal.getUserId() != userId) ? false : repository.remove(id) != null;
     }
 
     @Override
-    public Meal get(int id, int authUserId) {
+    public Meal get(int id, int userId) {
         Meal meal = repository.get(id);
-        return (meal != null && meal.getUserId() != authUserId) ? null : meal;
+        return (meal != null && meal.getUserId() != userId) ? null : meal;
     }
 
     @Override
-    public List<Meal> getAll(int authUserId, LocalDate fromDate, LocalDate toDate) {
+    public List<Meal> getAll(int userId) {
+        return getAllFiltered(userId, null, null);
+    }
+
+    @Override
+    public List<Meal> getAllFiltered(int userId, LocalDate fromDate, LocalDate toDate) {
         return repository.values().stream()
-                .filter(meal -> meal.getUserId() == authUserId)
+                .filter(meal -> meal.getUserId() == userId)
                 .filter(meal -> fromDate == null || meal.getDate().compareTo(fromDate) >= 0)
                 .filter(meal -> toDate == null || meal.getDate().compareTo(toDate) <= 0)
                 .sorted(Comparator.comparing(Meal::getDate)
