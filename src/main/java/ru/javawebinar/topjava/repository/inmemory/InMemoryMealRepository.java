@@ -81,7 +81,7 @@ public class InMemoryMealRepository implements MealRepository {
         repository.computeIfPresent(userId, (unused, userMeals) -> {
             resultMeal.set(userMeals.values().stream()
                     .filter(meal -> meal.getUserId() == userId)
-                    .filter(meal -> DateTimeUtil.isBetweenClosed(meal.getDate(), fromDate, toDate == null ? null : toDate.plusDays(1)))
+                    .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), fromDate, toDate == null ? null : toDate.plusDays(1)))
                     .sorted(Comparator.comparing(Meal::getDate)
                             .thenComparing(Meal::getTime)
                             .reversed())
