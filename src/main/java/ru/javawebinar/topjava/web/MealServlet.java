@@ -108,15 +108,14 @@ public class MealServlet extends HttpServlet {
         response.sendRedirect("meals");
     }
 
-
     private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return isEmpty(paramValue) ? LocalDate.parse(paramValue) : null;
+        return isEmpty(paramValue) ? null : LocalDate.parse(paramValue);
     }
 
     private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return isEmpty(paramValue) ? LocalTime.parse(paramValue) : null;
+        return isEmpty(paramValue) ? null : LocalTime.parse(paramValue);
     }
 
     private int getId(HttpServletRequest request) {
