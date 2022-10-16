@@ -79,33 +79,21 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
-            case "filter":
-                log.info("filter");
-                saveFilterDataAndRedirect(request, response);
-                break;
             case "all":
             default:
                 log.info("getAll");
-                restoreFilterDataAndRedirect(request, response);
+                LocalDate fromDate = getDateFromRequest(request, "fromDate");
+                LocalTime fromTime = getTimeFromRequest(request, "fromTime");
+                LocalDate toDate = getDateFromRequest(request, "toDate");
+                LocalTime toTime = getTimeFromRequest(request, "toTime");
+                request.setAttribute("fromDate", fromDate);
+                request.setAttribute("fromTime", fromTime);
+                request.setAttribute("toDate",toDate);
+                request.setAttribute("toTime", toTime);
+                request.setAttribute("meals", mealRestController.getAllFiltered(fromDate, fromTime, toDate, toTime));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
-    }
-
-    private void restoreFilterDataAndRedirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LocalDate fromDate = (LocalDate) request.getSession().getAttribute("fromDate");
-        LocalTime fromTime = (LocalTime) request.getSession().getAttribute("fromTime");
-        LocalDate toDate = (LocalDate) request.getSession().getAttribute("toDate");
-        LocalTime toTime = (LocalTime) request.getSession().getAttribute("toTime");
-        request.setAttribute("meals", mealRestController.getAllFiltered(fromDate, fromTime, toDate, toTime));
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
-    }
-
-    private void saveFilterDataAndRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute("fromDate", getDateFromRequest(request, "fromDate"));
-        request.getSession().setAttribute("fromTime", getTimeFromRequest(request, "fromTime"));
-        request.getSession().setAttribute("toDate", getDateFromRequest(request, "toDate"));
-        request.getSession().setAttribute("toTime", getTimeFromRequest(request, "toTime"));
-        response.sendRedirect("meals");
     }
 
     private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
