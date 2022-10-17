@@ -22,7 +22,7 @@ public class SpringMain {
                     Role.ADMIN));
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            System.out.println(mealRestController.getAllFiltered());
+            System.out.println(mealRestController.getAll());
         }
     }
 }
