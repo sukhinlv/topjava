@@ -47,14 +47,14 @@ public class MealServlet extends HttpServlet {
         int calories = Integer.parseInt(request.getParameter("calories"));
 
         if (hasLength(id)) {
-            Meal newMeal = new Meal(null, dateTime, description, calories, authUserId());
-            log.info("Create {}", newMeal);
-            mealRestController.create(newMeal);
-        } else {
             Meal updatedMeal = mealRestController.get(Integer.parseInt(id));
             Meal newMeal = new Meal(updatedMeal.getId(), dateTime, description, calories, updatedMeal.getUserId());
             log.info("Update {}", newMeal);
             mealRestController.update(newMeal, newMeal.getId());
+        } else {
+            Meal newMeal = new Meal(null, dateTime, description, calories, authUserId());
+            log.info("Create {}", newMeal);
+            mealRestController.create(newMeal);
         }
 
         response.sendRedirect("meals");
@@ -98,12 +98,12 @@ public class MealServlet extends HttpServlet {
 
     private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return hasLength(paramValue) ? null : LocalDate.parse(paramValue);
+        return hasLength(paramValue) ? LocalDate.parse(paramValue) : null;
     }
 
     private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return hasLength(paramValue) ? null : LocalTime.parse(paramValue);
+        return hasLength(paramValue) ? LocalTime.parse(paramValue) : null;
     }
 
     private int getId(HttpServletRequest request) {

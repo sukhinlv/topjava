@@ -16,10 +16,9 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String action = request.getParameter("action");
-
-        if (action != null && action.equals("logUser")) {
-            int loggedUser = Integer.parseInt(request.getParameter("loggedUser"));
+        String loggedUserParam = request.getParameter("loggedUser");
+        if (loggedUserParam != null) {
+            int loggedUser = Integer.parseInt(loggedUserParam);
             log.info("Log user with id={}", loggedUser);
             setAuthUserId(loggedUser);
             response.sendRedirect("meals");
