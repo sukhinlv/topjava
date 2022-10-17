@@ -18,7 +18,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 public class MealServlet extends HttpServlet {
@@ -46,7 +46,7 @@ public class MealServlet extends HttpServlet {
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
 
-        if (isEmpty(id)) {
+        if (hasLength(id)) {
             Meal newMeal = new Meal(null, dateTime, description, calories, authUserId());
             log.info("Create {}", newMeal);
             mealRestController.create(newMeal);
@@ -98,12 +98,12 @@ public class MealServlet extends HttpServlet {
 
     private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return isEmpty(paramValue) ? null : LocalDate.parse(paramValue);
+        return hasLength(paramValue) ? null : LocalDate.parse(paramValue);
     }
 
     private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName) {
         String paramValue = request.getParameter(paramName);
-        return isEmpty(paramValue) ? null : LocalTime.parse(paramValue);
+        return hasLength(paramValue) ? null : LocalTime.parse(paramValue);
     }
 
     private int getId(HttpServletRequest request) {
