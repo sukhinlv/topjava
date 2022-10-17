@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +30,7 @@ public class InMemoryMealRepository implements MealRepository {
         AtomicReference<Meal> resultMeal = new AtomicReference<>(null);
         repository.compute(userId, (unused, userMeals) -> {
             if (userMeals == null) {
-                userMeals = new HashMap<>();
+                userMeals = new ConcurrentHashMap<>();
             }
             if (meal.isNew()) {
                 meal.setId(counter.incrementAndGet());
@@ -82,9 +81,7 @@ public class InMemoryMealRepository implements MealRepository {
             resultMeal.set(userMeals.values().stream()
                     .filter(meal -> meal.getUserId() == userId)
                     .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), fromDate, toDate == null ? null : toDate.plusDays(1)))
-                    .sorted(Comparator.comparing(Meal::getDate)
-                            .thenComparing(Meal::getTime)
-                            .reversed())
+                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                     .collect(Collectors.toList()));
             return userMeals;
         });
