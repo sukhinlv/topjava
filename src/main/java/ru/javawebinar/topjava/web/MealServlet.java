@@ -42,19 +42,19 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
-        String description = request.getParameter("description");
-        int calories = Integer.parseInt(request.getParameter("calories"));
 
-        if (hasLength(id)) {
-            Meal updatedMeal = mealRestController.get(Integer.parseInt(id));
-            Meal newMeal = new Meal(updatedMeal.getId(), dateTime, description, calories, updatedMeal.getUserId());
-            log.info("Update {}", newMeal);
-            mealRestController.update(newMeal, newMeal.getId());
+        Meal meal = new Meal(hasLength(id) ? Integer.parseInt(id) : null,
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")),
+                authUserId());
+
+        if (meal.isNew()) {
+            log.info("Create {}", meal);
+            mealRestController.create(meal);
         } else {
-            Meal newMeal = new Meal(null, dateTime, description, calories, authUserId());
-            log.info("Create {}", newMeal);
-            mealRestController.create(newMeal);
+            log.info("Update {}", meal);
+            mealRestController.update(meal, meal.getId());
         }
 
         response.sendRedirect("meals");
@@ -86,10 +86,6 @@ public class MealServlet extends HttpServlet {
                 LocalTime fromTime = getTimeFromRequest(request, "fromTime");
                 LocalDate toDate = getDateFromRequest(request, "toDate");
                 LocalTime toTime = getTimeFromRequest(request, "toTime");
-                request.setAttribute("fromDate", fromDate);
-                request.setAttribute("fromTime", fromTime);
-                request.setAttribute("toDate",toDate);
-                request.setAttribute("toTime", toTime);
                 request.setAttribute("meals", mealRestController.getAllFiltered(fromDate, fromTime, toDate, toTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
