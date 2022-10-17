@@ -38,7 +38,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public boolean delete(int id, int userId) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        return userMeals == null ? false : userMeals.remove(id) != null;
+        return userMeals != null && userMeals.remove(id) != null;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAllFiltered(int userId, LocalDate fromDate, LocalDate toDate) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        return userMeals == null ? new ArrayList<>() : userMeals.values().stream()
+        return userMeals == null ? Collections.emptyList() : userMeals.values().stream()
                 .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), fromDate, toDate == null ? null : toDate.plusDays(1)))
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
