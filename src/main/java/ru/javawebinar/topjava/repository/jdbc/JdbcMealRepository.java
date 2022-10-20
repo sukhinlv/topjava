@@ -7,7 +7,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+@Repository("jdbcMealRepository")
 public class JdbcMealRepository implements MealRepository {
 
     @Override

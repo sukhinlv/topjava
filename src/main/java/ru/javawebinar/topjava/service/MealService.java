@@ -17,8 +17,8 @@ public class MealService {
 
     private final MealRepository repository;
 
-    public MealService(MealRepository repository) {
-        this.repository = repository;
+    public MealService(MealRepository jdbcMealRepository) {
+        this.repository = jdbcMealRepository;
     }
 
     public Meal get(int id, int userId) {
