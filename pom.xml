@@ -50,6 +50,11 @@
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -133,7 +138,14 @@
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.1</version>
         </dependency>
-    </dependencies>
+
+        <!--Fix of build error: unknown enum constant javax.annotation.meta.When.MAYBE-->
+        <!--https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning-->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>3.0.1</version>
+        </dependency>    </dependencies>
 
     <profiles>
     </profiles>
