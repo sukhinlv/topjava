@@ -14,8 +14,8 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public UserService(UserRepository jdbcUserRepository) {
-        this.repository = jdbcUserRepository;
+    public UserService(UserRepository repository) {
+        this.repository = repository;
     }
 
     public User create(User user) {
