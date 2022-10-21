@@ -13,9 +13,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfDayOrMin;
-import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfNextDayOrMax;
-
 @Repository
 public class JdbcMealRepository implements MealRepository {
 
@@ -69,7 +66,7 @@ public class JdbcMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return getBetweenHalfOpen(atStartOfDayOrMin(null), atStartOfNextDayOrMax(null), userId);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY date_time DESC", ROW_MAPPER, userId);
     }
 
     @Override
