@@ -17,6 +17,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -33,7 +35,7 @@ public class MealServiceTest {
     }
 
     @Autowired
-    MealService service;
+    private MealService service;
 
     @Test
     public void get() {
@@ -63,31 +65,33 @@ public class MealServiceTest {
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(updated.getId(), USER_ID), updated);
+        assertMatch(service.get(updated.getId(), USER_ID), getUpdated());
     }
 
     @Test
     public void create() {
+        Meal createdMeal = service.create(getNew(), USER_ID);
+
         Meal newMeal = getNew();
-        Meal createdMeal = service.create(newMeal, USER_ID);
         newMeal.setId(createdMeal.getId());
+
         assertMatch(createdMeal, newMeal);
         assertMatch(service.get(createdMeal.getId(), USER_ID), newMeal);
     }
 
     @Test
     public void itShouldNotGetSomeoneElseMeal() {
-        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID1, ANOTHER_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID1, ADMIN_ID));
     }
 
     @Test
     public void itShouldNotDeleteSomeoneElseMeal() {
-        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID1, ANOTHER_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID1, ADMIN_ID));
     }
 
     @Test
     public void itShouldNotUpdateAnotherMeal() {
-        assertThrows(NotFoundException.class, () -> service.update(getUpdated(), ANOTHER_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.update(getUpdated(), ADMIN_ID));
     }
 
     @Test
