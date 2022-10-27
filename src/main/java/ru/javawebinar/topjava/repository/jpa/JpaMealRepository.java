@@ -62,6 +62,10 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return null;
+        return em.createNamedQuery(Meal.BETWEEN_HALF_OPEN, Meal.class)
+                .setParameter("user_id", userId)
+                .setParameter("start_date_time", startDateTime)
+                .setParameter("end_date_time", endDateTime)
+                .getResultList();
     }
 }
