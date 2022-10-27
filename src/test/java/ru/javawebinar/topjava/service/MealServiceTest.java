@@ -14,6 +14,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -65,6 +66,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
+        assertThat(actual.getUser().getId()).isEqualTo(ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
     }
 
