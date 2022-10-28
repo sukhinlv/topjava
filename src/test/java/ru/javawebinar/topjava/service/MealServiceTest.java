@@ -36,13 +36,10 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-
-    @Autowired
-    private MealService service;
-
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     private static final List<String> finishedList = new LinkedList<>();
+    public static final int REPORT_INDENT = 30;
 
     @Rule
     public Stopwatch stopWatch = new Stopwatch() {
@@ -51,9 +48,12 @@ public class MealServiceTest {
             String testName = description.getMethodName();
             long millis = TimeUnit.NANOSECONDS.toMillis(nanos);
             log.info(">>>>>>>>>>  Test {}, spent {} ms", testName, millis);
-            finishedList.add(String.format("%s - %d", testName, millis));
+            finishedList.add(String.format("%s %" + (REPORT_INDENT - testName.length()) + "d", testName, millis));
         }
     };
+
+    @Autowired
+    private MealService service;
 
     @AfterClass
     public static void afterClass() {
@@ -117,9 +117,9 @@ public class MealServiceTest {
     }
 
     @Test
-    public void itShouldThrowWhenUpdateUnknownMeal() {
+    public void updateNotFound() {
         Meal mealWrongId = getUpdated();
-        mealWrongId.setId(MEAL_ID + 100_000);
+        mealWrongId.setId(NOT_FOUND);
         assertThrows(NotFoundException.class, () -> service.update(mealWrongId, USER_ID));
     }
 
