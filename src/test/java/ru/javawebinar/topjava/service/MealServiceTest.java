@@ -39,7 +39,6 @@ public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     private static final List<String> finishedList = new LinkedList<>();
-    public static final int REPORT_INDENT = 30;
 
     @Rule
     public Stopwatch stopWatch = new Stopwatch() {
@@ -48,7 +47,7 @@ public class MealServiceTest {
             String testName = description.getMethodName();
             long millis = TimeUnit.NANOSECONDS.toMillis(nanos);
             log.info(">>>>>>>>>>  Test {}, spent {} ms", testName, millis);
-            finishedList.add(String.format("%s %" + (REPORT_INDENT - testName.length()) + "d", testName, millis));
+            finishedList.add(String.format("%-25s %5d", testName, millis));
         }
     };
 
@@ -118,9 +117,9 @@ public class MealServiceTest {
 
     @Test
     public void updateNotFound() {
-        Meal mealWrongId = getUpdated();
-        mealWrongId.setId(NOT_FOUND);
-        assertThrows(NotFoundException.class, () -> service.update(mealWrongId, USER_ID));
+        Meal mealWithWrongId = getUpdated();
+        mealWithWrongId.setId(NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.update(mealWithWrongId, USER_ID));
     }
 
     @Test
