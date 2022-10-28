@@ -20,7 +20,6 @@ import java.time.LocalTime;
 })
 public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "Meal.delete";
-    public static final String GET = "Meal.get";
     public static final String ALL_SORTED = "Meal.getAllSorted";
     public static final String BETWEEN_HALF_OPEN = "Meal.getBetweenHalfOpen";
 
@@ -37,9 +36,9 @@ public class Meal extends AbstractBaseEntity {
     @Range(min = 1)
     private int calories;
 
-    @ManyToOne(cascade=CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Meal() {
