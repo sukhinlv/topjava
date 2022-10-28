@@ -33,8 +33,8 @@ public class MealServiceTest extends StopWatchTestCase {
 
     @Test
     public void delete() {
-        service.delete(MEAL1_ID, USER_ID);
-        assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, USER_ID));
+        service.delete(MEAL_ID, USER_ID);
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, USER_ID));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class MealServiceTest extends StopWatchTestCase {
 
     @Test
     public void deleteNotOwn() {
-        assertThrows(NotFoundException.class, () -> service.delete(MEAL1_ID, ADMIN_ID));
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, ADMIN_ID));
     }
 
     @Test
@@ -77,20 +77,27 @@ public class MealServiceTest extends StopWatchTestCase {
 
     @Test
     public void getNotOwn() {
-        assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, ADMIN_ID));
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, ADMIN_ID));
     }
 
     @Test
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        MEAL_MATCHER.assertMatch(service.get(MEAL_ID, USER_ID), getUpdated());
+    }
+
+    @Test
+    public void itShouldThrowWhenUpdateUnknownMeal() {
+        Meal mealWrongId = getUpdated();
+        mealWrongId.setId(MEAL_ID + 100_000);
+        assertThrows(NotFoundException.class, () -> service.update(mealWrongId, USER_ID));
     }
 
     @Test
     public void updateNotOwn() {
         assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
+        MEAL_MATCHER.assertMatch(service.get(MEAL_ID, USER_ID), meal1);
     }
 
     @Test
