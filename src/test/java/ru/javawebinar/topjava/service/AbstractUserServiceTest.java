@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -90,6 +91,22 @@ public abstract class AbstractUserServiceTest extends AbstractDbTest {
     public void get() {
         User user = service.get(USER_ID);
         USER_MATCHER.assertMatch(user, UserTestData.user);
+    }
+
+    @Test
+    public void getByIdWithMeals() {
+        User user = service.getByIdWithMeals(USER_ID);
+        User testUser = UserTestData.user;
+        testUser.setMeals(List.of(
+                MealTestData.meal7,
+                MealTestData.meal6,
+                MealTestData.meal5,
+                MealTestData.meal4,
+                MealTestData.meal3,
+                MealTestData.meal2,
+                MealTestData.meal1
+        ));
+        USER_WITH_MEALS_MATCHER.assertMatch(user, testUser);
     }
 
     @Test
