@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -86,6 +87,13 @@ public abstract class AbstractMealServiceTest extends AbstractDbTest {
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
+    }
+
+    @Test
+    public void getByIdWithUser() {
+        Meal actual = service.getByIdWithUser(ADMIN_MEAL_ID, ADMIN_ID);
+        MEAL_MATCHER.assertMatch(actual, adminMeal1);
+        assertThat(actual.getUser().getId()).isEqualTo(ADMIN_ID);
     }
 
     @Test

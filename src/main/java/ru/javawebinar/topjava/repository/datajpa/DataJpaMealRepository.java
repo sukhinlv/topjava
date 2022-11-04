@@ -28,6 +28,11 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
+    public Meal getByIdWithUser(int id, int userId) {
+        return crudRepository.getByIdWithUser(id, userId);
+    }
+
+    @Override
     public boolean delete(int id, int userId) {
         return crudRepository.delete(id, userId) != 0;
     }
