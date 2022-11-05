@@ -9,7 +9,6 @@ public class Profiles {
             JPA = "jpa",
             DATAJPA = "datajpa";
 
-    @SuppressWarnings("unused")
     public static final String REPOSITORY_IMPLEMENTATION = DATAJPA;
 
     public static final String
