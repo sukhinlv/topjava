@@ -6,6 +6,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
 
 @ContextConfiguration({
@@ -15,5 +16,6 @@ import ru.javawebinar.topjava.ActiveDbProfileResolver;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 @RunWith(SpringRunner.class)
+@Transactional
 public abstract class AbstractDbTest {
 }
