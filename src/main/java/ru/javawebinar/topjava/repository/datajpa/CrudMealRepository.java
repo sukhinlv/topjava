@@ -10,27 +10,28 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
-    @Query("select m from Meal m where m.id = :id and m.user.id = :userId")
-    Meal get(@Param("id") Integer id,@Param("userId") Integer userId);
+    @Query("SELECT m FROM Meal m WHERE m.id = :id AND m.user.id = :userId")
+    Meal get(@Param("id") Integer id, @Param("userId") int userId);
 
     @Modifying
     @Transactional
-    @Query("delete from Meal m where m.id=:id and m.user.id=:userId")
+    @Query("DELETE FROM Meal m WHERE m.id = :id AND m.user.id = :userId")
     int delete(@Param("id") int id, @Param("userId") int userId);
 
-    @Query("select m from Meal m where m.user.id = :userId order by m.dateTime DESC")
-    List<Meal> getAllSorted(@Param("userId") Integer userId);
+    @Query("SELECT m FROM Meal m WHERE m.user.id = :userId ORDER BY m.dateTime DESC")
+    List<Meal> getAllSorted(@Param("userId") int userId);
 
     @Query("""
-            select m from Meal m
-            where m.dateTime >= :startTime and m.dateTime < :endTime and m.user.id = :userId
-            order by m.dateTime DESC""")
+            SELECT m FROM Meal m
+            WHERE m.dateTime >= :startTime AND m.dateTime < :endTime AND m.user.id = :userId
+            ORDER BY m.dateTime DESC""")
     List<Meal> getBetweenHalfOpen(@Param("startTime") LocalDateTime startTime,
                                   @Param("endTime") LocalDateTime endTime,
-                                  @Param("userId") Integer userId);
+                                  @Param("userId") int userId);
 
-    @Query("select m from Meal m left join fetch m.user where m.user.id = :userId and m.id = :id order by m.dateTime DESC")
+    @Query("SELECT m FROM Meal m JOIN FETCH m.user WHERE m.user.id = :userId AND m.id = :id ORDER BY m.dateTime DESC")
     Meal getByIdWithUser(@Param("id") int id, @Param("userId") int userId);
 }
