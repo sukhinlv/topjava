@@ -23,7 +23,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-public abstract class AbstractMealServiceTest extends AbstractDbTest {
+public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     private static final Logger log = getLogger("result");
 
     private static final StringBuilder results = new StringBuilder();
@@ -91,9 +91,9 @@ public abstract class AbstractMealServiceTest extends AbstractDbTest {
 
     @Test
     public void getByIdWithUser() {
-        Meal actual = service.getByIdWithUser(ADMIN_MEAL_ID, ADMIN_ID);
+        Meal actual = service.getByIdWithUserId(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
-        assertThat(actual.getUser().getId()).isEqualTo(ADMIN_ID);
+        assertThat(actual.getUser()).usingRecursiveComparison().isEqualTo(adminMeal1.getUser());
     }
 
     @Test

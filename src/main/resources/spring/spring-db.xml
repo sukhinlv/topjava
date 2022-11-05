@@ -35,13 +35,13 @@
         </bean>
 
         <beans profile="hsqldb">
-            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcHsqlMealRepository">
+            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.HsqlJdbcMealRepository">
                 <constructor-arg ref="jdbcTemplate"/>
                 <constructor-arg ref="namedJdbcTemplate"/>
             </bean>
         </beans>
         <beans profile="postgres">
-            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcPostgresMealRepository">
+            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.PostgresJdbcMealRepository">
                 <constructor-arg ref="jdbcTemplate"/>
                 <constructor-arg ref="namedJdbcTemplate"/>
             </bean>
