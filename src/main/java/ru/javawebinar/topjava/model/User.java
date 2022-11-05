@@ -77,7 +77,6 @@ public class User extends AbstractNamedEntity {
         this.enabled = enabled;
         this.registered = registered;
         setRoles(roles);
-        meals = new ArrayList<>();
     }
 
     public String getEmail() {
