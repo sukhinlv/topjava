@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.User;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -35,5 +36,19 @@ public class UserTestData {
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
+    }
+
+    static {
+        user.setMeals(List.of(
+                MealTestData.meal7,
+                MealTestData.meal6,
+                MealTestData.meal5,
+                MealTestData.meal4,
+                MealTestData.meal3,
+                MealTestData.meal2,
+                MealTestData.meal1
+        ));
+
+        guest.setMeals(List.of());
     }
 }
