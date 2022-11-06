@@ -3,7 +3,6 @@ package ru.javawebinar.topjava;
 import org.springframework.util.ClassUtils;
 
 public class Profiles {
-    @SuppressWarnings("unused")
     public static final String
             JDBC = "jdbc",
             JPA = "jpa",
