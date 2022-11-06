@@ -10,7 +10,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -18,7 +17,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @Test
     public void delete() {
@@ -56,15 +55,6 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
-    }
-
-    @Test
-    public void getByIdWithUser() {
-        Meal actual = service.getByIdWithUser(ADMIN_MEAL_ID, ADMIN_ID);
-        MEAL_MATCHER.assertMatch(actual, adminMeal1);
-        assertThat(actual.getUser())
-                .usingRecursiveComparison()
-                .ignoringFields("password", "meals").isEqualTo(admin);
     }
 
     @Test
