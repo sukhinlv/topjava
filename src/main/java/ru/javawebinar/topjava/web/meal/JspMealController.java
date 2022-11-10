@@ -10,6 +10,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("/create")
-    public String getCreate(Model model, HttpServletRequest request) {
+    public String getCreate(Model model, HttpServletRequest request, HttpServletResponse response) {
         createOrUpdateMeal(model, request, true);
         return "mealForm";
     }
@@ -72,10 +73,14 @@ public class JspMealController extends AbstractMealController {
     }
 
     private void createOrUpdateMeal(Model model, HttpServletRequest request, boolean isNew) {
-        final Meal meal = isNew ?
-                new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                super.get(getId(request));
-        model.addAttribute("meal", meal);
+        Meal meal;
+        if (isNew) {
+            model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
+            model.addAttribute("action", "create");
+        } else {
+            model.addAttribute("meal", super.get(getId(request)));
+            model.addAttribute("action", "update");
+        }
     }
 
     private int getId(HttpServletRequest request) {
