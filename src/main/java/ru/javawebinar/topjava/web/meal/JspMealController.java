@@ -38,19 +38,19 @@ public class JspMealController extends AbstractMealController {
         return "meals";
     }
 
-    @GetMapping("/create")
+    @GetMapping(params = "create")
     public String getCreate(Model model, HttpServletRequest request, HttpServletResponse response) {
         createOrUpdateMeal(model, request, true);
         return "mealForm";
     }
 
-    @GetMapping("/update")
+    @GetMapping(params = "update")
     public String getUpdate(Model model, HttpServletRequest request) {
         createOrUpdateMeal(model, request, false);
         return "mealForm";
     }
 
-    @GetMapping("/delete")
+    @GetMapping(params = "delete")
     public String getDelete(HttpServletRequest request) {
         super.delete(getId(request));
         return "redirect:/meals";
