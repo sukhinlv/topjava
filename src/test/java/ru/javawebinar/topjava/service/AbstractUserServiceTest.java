@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.service;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.env.Environment;
@@ -17,7 +19,10 @@ import java.util.*;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
+
+    protected static final Logger log = LoggerFactory.getLogger(AbstractUserServiceTest.class);
 
     @Autowired
     protected UserService service;
@@ -31,6 +36,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Before
     public void setup() {
         Objects.requireNonNull(cacheManager.getCache("users")).clear();
+
+        // TODO: remove in future HWs (and logger too)
+        log.info("cacheManager:  " + cacheManager.getClass().getSimpleName());
     }
 
     @Test
