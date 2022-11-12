@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -17,9 +18,11 @@ import javax.validation.ConstraintViolationException;
 import java.util.*;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.NO_CACHE;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 
+@ActiveProfiles(NO_CACHE)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     protected static final Logger log = LoggerFactory.getLogger(AbstractUserServiceTest.class);
