@@ -107,7 +107,9 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        List<User> users = jdbcTemplate.query("SELECT us.*, ur.role FROM users AS us " + "LEFT JOIN user_roles AS ur ON us.id = ur.user_id " + "ORDER BY name, email", new UserWithRolesRowMapper());
+        List<User> users = jdbcTemplate.query("SELECT us.*, ur.role FROM users AS us "
+                + "LEFT JOIN user_roles AS ur ON us.id = ur.user_id "
+                + "ORDER BY name, email", new UserWithRolesRowMapper());
         return users.stream().distinct().toList();
     }
 
