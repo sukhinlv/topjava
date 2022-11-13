@@ -118,6 +118,10 @@
               p:entityManagerFactory-ref="entityManagerFactory"/>
 
         <bean class="ru.javawebinar.topjava.repository.JpaUtil"/>
+
+        <beans profile="nocache">
+            <context:property-override location="classpath:db/nocache.properties"/>
+        </beans>
     </beans>
 
     <beans profile="jpa">
