@@ -128,7 +128,10 @@ public class JdbcUserRepository implements UserRepository {
             }
 
             user = usersMap.merge(user.id(), user, (oldUser, newUser) -> {
-                newUser.getRoles().stream().findFirst().ifPresent(newRole -> oldUser.getRoles().add(newRole));
+                Role role = newUser.getRoles().iterator().next();
+                if (role != null) {
+                    oldUser.getRoles().add(role);
+                };
                 return oldUser;
             });
 
