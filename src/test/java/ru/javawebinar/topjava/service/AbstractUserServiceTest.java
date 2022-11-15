@@ -25,13 +25,13 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @ActiveProfiles(NO_CACHE)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
-    protected static final Logger log = LoggerFactory.getLogger(AbstractUserServiceTest.class);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected UserService service;
 
     @Autowired
-    Environment env;
+    private Environment env;
 
     @Autowired
     private CacheManager cacheManager;

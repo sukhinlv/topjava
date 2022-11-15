@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +17,6 @@ import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -72,19 +70,9 @@ public class JdbcUserRepository implements UserRepository {
     private void saveUserRoles(User user, int newId) {
         Set<Role> roles = user.getRoles();
         if (!roles.isEmpty()) {
-            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?,?)", new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    for (Role role : roles) {
-                        ps.setInt(1, newId);
-                        ps.setString(2, role.name());
-                    }
-                }
-
-                @Override
-                public int getBatchSize() {
-                    return roles.size();
-                }
+            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?,?)", roles, roles.size(), (ps, role) -> {
+                ps.setInt(1, newId);
+                ps.setString(2, role.name());
             });
         }
     }
@@ -102,6 +90,9 @@ public class JdbcUserRepository implements UserRepository {
 
     private User queryRolesForUser(List<User> users) {
         User user = DataAccessUtils.singleResult(users);
+        if (user == null) {
+            return null;
+        }
         List<String> roles = jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", String.class, user.id());
         user.setRoles(roles.stream().map(Role::valueOf).toList());
         return user;
