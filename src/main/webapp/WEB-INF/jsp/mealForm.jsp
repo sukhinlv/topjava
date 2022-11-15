@@ -12,14 +12,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2>
-        <c:choose>
-            <c:when test="${meal.id == null}">
-                <spring:message code="meal.newmeal"/>
-            </c:when>
-            <c:otherwise>
-                <spring:message code="meal.editmeal"/>
-            </c:otherwise>
-        </c:choose>
+        <spring:message code="${meal.id eq null ? 'meal.newmeal' : 'meal.editmeal'}"/>
     </h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="<spring:url value="/meals"/>">
