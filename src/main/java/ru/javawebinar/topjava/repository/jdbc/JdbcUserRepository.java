@@ -101,9 +101,6 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private User queryRolesForUser(List<User> users) {
-        if (users == null || users.size() == 0) {
-            return null;
-        }
         User user = DataAccessUtils.singleResult(users);
         List<String> roles = jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", String.class, user.id());
         user.setRoles(roles.stream().map(Role::valueOf).toList());
