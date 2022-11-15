@@ -10,6 +10,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -31,14 +32,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     protected UserService service;
 
     @Autowired
-    private Environment env;
+    protected Environment env;
 
     @Autowired
     private CacheManager cacheManager;
 
     @Before
     public void setup() {
-        Objects.requireNonNull(cacheManager.getCache("users")).clear();
+        if (!Arrays.asList(env.getActiveProfiles()).contains(NO_CACHE)) {
+            Objects.requireNonNull(cacheManager.getCache("users")).clear();
+        }
 
         // TODO: remove in future HWs (and logger too)
         log.info("cacheManager:  " + cacheManager.getClass().getSimpleName());
@@ -103,7 +106,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        Assume.assumeFalse(Arrays.asList(env.getActiveProfiles()).contains("jdbc"));
+        Assume.assumeFalse(Arrays.asList(env.getActiveProfiles()).contains(Profiles.JDBC));
 
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
