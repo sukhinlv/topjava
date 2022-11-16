@@ -16,6 +16,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,7 +47,7 @@ public class JdbcUserRepository implements UserRepository {
     public User save(User user) {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
-            throw new IllegalArgumentException(String.format("Save user - validation errors (%s)", violations));
+            throw new ConstraintViolationException("Save user - validation errors", violations);
         }
 
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
@@ -131,7 +132,7 @@ public class JdbcUserRepository implements UserRepository {
                 Role role = newUser.getRoles().iterator().next();
                 if (role != null) {
                     oldUser.getRoles().add(role);
-                };
+                }
                 return oldUser;
             });
 
