@@ -28,13 +28,13 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping
-    public String getAllMeals(Model model, HttpServletRequest request) {
+    public String getAll(Model model) {
         model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
     @GetMapping("/filter")
-    public String getAllMealsFiltered(Model model, HttpServletRequest request) {
+    public String getAllFiltered(Model model, HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
@@ -44,34 +44,25 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("/create")
-    public String getCreate(Model model, HttpServletRequest request) {
-        createOrUpdateMeal(model, request, true);
+    public String create(Model model) {
+        model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
         return "mealForm";
     }
 
     @GetMapping("/update")
-    public String getUpdate(Model model, HttpServletRequest request) {
-        createOrUpdateMeal(model, request, false);
+    public String update(Model model, HttpServletRequest request) {
+        model.addAttribute("meal", super.get(getId(request)));
         return "mealForm";
     }
 
-    private void createOrUpdateMeal(Model model, HttpServletRequest request, boolean isNew) {
-        Meal meal;
-        if (isNew) {
-            model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
-        } else {
-            model.addAttribute("meal", super.get(getId(request)));
-        }
-    }
-
     @GetMapping("/delete")
-    public String getDelete(HttpServletRequest request) {
+    public String delete(HttpServletRequest request) {
         super.delete(getId(request));
         return "redirect:/meals";
     }
 
     @PostMapping
-    public String postUpdate(HttpServletRequest request) throws UnsupportedEncodingException {
+    public String save(HttpServletRequest request) throws UnsupportedEncodingException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),

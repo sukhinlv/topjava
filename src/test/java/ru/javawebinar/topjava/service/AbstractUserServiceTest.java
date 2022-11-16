@@ -16,7 +16,10 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.Profiles.NO_CACHE;
@@ -39,11 +42,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Before
     public void setup() {
-        if (!Arrays.asList(env.getActiveProfiles()).contains(NO_CACHE)) {
-            Objects.requireNonNull(cacheManager.getCache("users")).clear();
-        }
-
-        // TODO: remove in future HWs (and logger too)
         log.info("cacheManager:  " + cacheManager.getClass().getSimpleName());
     }
 
@@ -105,7 +103,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void createWithException() throws Exception {
+    public void createWithException() {
         Assume.assumeFalse(Arrays.asList(env.getActiveProfiles()).contains(Profiles.JDBC));
 
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));

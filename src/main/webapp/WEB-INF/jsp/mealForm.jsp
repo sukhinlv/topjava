@@ -12,7 +12,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2>
-        <spring:message code="${meal.id eq null ? 'meal.newmeal' : 'meal.editmeal'}"/>
+        <spring:message code="${meal.new ? 'meal.newmeal' : 'meal.editmeal'}"/>
     </h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="<spring:url value="/meals"/>">
