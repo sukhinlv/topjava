@@ -1,12 +1,10 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.model.Role;
@@ -24,22 +22,14 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 
 @ActiveProfiles(NO_CACHE)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
-
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected UserService service;
 
-    @Autowired
-    protected Environment env;
-
-    @Autowired
-    private CacheManager cacheManager;
-
     @Before
     public void setup() {
-        log.info("cacheManager:  " + cacheManager.getClass().getSimpleName());
     }
 
     @Test
@@ -91,12 +81,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(ADMIN_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.getAll(), guest, updated, user);
     }
 
     @Test
-    public void getAll() {
-        List<User> all = service.getAll();
-        USER_MATCHER.assertMatch(all, admin, guest, user);
+    public void updateUpdateAndThenGetAll() {
+        USER_MATCHER.assertMatch(service.getAll(), admin, guest, user);
     }
 
     @Test
