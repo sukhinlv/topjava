@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.formatter.CustomDateFormat;
+import ru.javawebinar.topjava.util.formatter.CustomTimeFormat;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -60,10 +62,16 @@ public class MealRestController extends AbstractMealController {
 //            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
 //            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
 //            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
-            @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalTime startTime,
-            @RequestParam(required = false) LocalDate endDate,
-            @RequestParam(required = false) LocalTime endTime) {
+
+//            @RequestParam(required = false) LocalDate startDate,
+//            @RequestParam(required = false) LocalTime startTime,
+//            @RequestParam(required = false) LocalDate endDate,
+//            @RequestParam(required = false) LocalTime endTime) {
+
+            @RequestParam(required = false) @CustomDateFormat LocalDate startDate,
+            @RequestParam(required = false) @CustomTimeFormat LocalTime startTime,
+            @RequestParam(required = false) @CustomDateFormat LocalDate endDate,
+            @RequestParam(required = false) @CustomTimeFormat LocalTime endTime) {
 
         return super.getBetween(startDate, startTime, endDate, endTime);
     }

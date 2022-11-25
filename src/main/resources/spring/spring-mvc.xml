@@ -10,11 +10,25 @@
     <bean id="stringToLocalDateConverter" class="ru.javawebinar.topjava.util.converter.StringToLocalDateConverter"/>
     <bean id="stringToLocalTimeConverter" class="ru.javawebinar.topjava.util.converter.StringToLocalTimeConverter"/>
 
-    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
-        <property name="converters">
+    <bean id="customDateFormatter" class="ru.javawebinar.topjava.util.formatter.CustomDateFormatter"/>
+    <bean id="customDateFormatAnnotationFormatterFactory" class="ru.javawebinar.topjava.util.formatter.CustomDateFormatAnnotationFormatterFactory"/>
+    <bean id="customTimeFormatter" class="ru.javawebinar.topjava.util.formatter.CustomTimeFormatter"/>
+    <bean id="customTimeFormatAnnotationFormatterFactory" class="ru.javawebinar.topjava.util.formatter.CustomTimeFormatAnnotationFormatterFactory"/>
+
+<!--    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">-->
+<!--        <property name="converters">-->
+<!--            <set>-->
+<!--                <ref bean="stringToLocalDateConverter"/>-->
+<!--                <ref bean="stringToLocalTimeConverter"/>-->
+<!--            </set>-->
+<!--        </property>-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
             <set>
-                <ref bean="stringToLocalDateConverter"/>
-                <ref bean="stringToLocalTimeConverter"/>
+                <ref bean="customDateFormatter"/>
+                <ref bean="customDateFormatAnnotationFormatterFactory"/>
+                <ref bean="customTimeFormatter"/>
+                <ref bean="customTimeFormatAnnotationFormatterFactory"/>
             </set>
         </property>
     </bean>
