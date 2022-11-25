@@ -14,7 +14,7 @@ public class CustomTimeFormatter implements Formatter<LocalTime> {
     }
 
     @Override
-    public String print(LocalTime localDate, Locale locale) {
-        return localDate.format(DateTimeFormatter.ofPattern("HH:mm", locale));
+    public String print(LocalTime localTime, Locale locale) {
+        return localTime.format(DateTimeFormatter.ofPattern("HH:mm", locale));
     }
 }
