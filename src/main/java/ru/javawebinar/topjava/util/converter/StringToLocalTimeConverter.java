@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringToLocalTimeConverter implements Converter<String, LocalTime> {
 
-    private String timePattern = "HH:MM";
+    private String timePattern = "HH:mm";
 
     public String getTimePattern() {
         return timePattern;
