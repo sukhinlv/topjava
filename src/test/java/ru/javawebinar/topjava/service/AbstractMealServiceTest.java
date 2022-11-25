@@ -72,14 +72,14 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        Meal updated = getUpdated();
+        Meal updated = getUpdatedMeal();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdatedMeal());
     }
 
     @Test
     void updateNotOwn() {
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> service.update(getUpdated(), ADMIN_ID));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> service.update(getUpdatedMeal(), ADMIN_ID));
         Assertions.assertEquals("Not found entity with id=" + MEAL1_ID, exception.getMessage());
         MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
     }

@@ -31,7 +31,7 @@ public class MealTestData {
         return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);
     }
 
-    public static Meal getUpdated() {
+    public static Meal getUpdatedMeal() {
         return new Meal(MEAL1_ID, meal1.getDateTime().plusMinutes(2), "Обновленный завтрак", 200);
     }
 }
