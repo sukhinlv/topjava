@@ -6,14 +6,16 @@ import org.springframework.format.Parser;
 import org.springframework.format.Printer;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class CustomDateTimeFormatAnnotationFormatterFactory implements AnnotationFormatterFactory<CustomDateTimeFormat> {
+
     @Override
     public Set<Class<?>> getFieldTypes() {
-        return new HashSet<>(List.of(LocalDate.class));
+        return new HashSet<>(List.of(LocalDate.class, LocalTime.class));
     }
 
     @Override
