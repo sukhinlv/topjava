@@ -1,4 +1,4 @@
-### get all meals for authentificated user
+### get all meals for authenticated user
 GET http://localhost:8080/topjava/rest/meals
 Accept: application/json
 
