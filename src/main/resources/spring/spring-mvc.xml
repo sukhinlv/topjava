@@ -7,36 +7,14 @@
 
     <bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-<!--    Converters 1/2 -->
-<!--    <bean id="stringToLocalDateConverter" class="ru.javawebinar.topjava.util.converter.StringToLocalDateConverter"/>-->
-<!--    <bean id="stringToLocalTimeConverter" class="ru.javawebinar.topjava.util.converter.StringToLocalTimeConverter"/>-->
-
-<!--    Formatters 1/2 -->
-<!--    <bean id="customDateFormatter" class="ru.javawebinar.topjava.util.formatter.CustomDateFormatter"/>-->
-<!--    <bean id="customTimeFormatter" class="ru.javawebinar.topjava.util.formatter.CustomTimeFormatter"/>-->
-
-    <!-- Formatter factory to define formatters using annotations 1/2 -->
-    <bean id="customDateTimeFormatAnnotationFormatterFactory" class="ru.javawebinar.topjava.util.formatter.CustomDateTimeFormatAnnotationFormatterFactory"/>
-
-<!--    Converters 2/2 -->
-<!--    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">-->
-<!--        <property name="converters">-->
-<!--            <set>-->
-<!--                <ref bean="stringToLocalDateConverter"/>-->
-<!--                <ref bean="stringToLocalTimeConverter"/>-->
-<!--            </set>-->
-<!--        </property>-->
-<!--    </bean>-->
+    <bean id="customDateFormatter" class="ru.javawebinar.topjava.util.formatter.CustomDateFormatter"/>
+    <bean id="customTimeFormatter" class="ru.javawebinar.topjava.util.formatter.CustomTimeFormatter"/>
 
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="formatters">
             <set>
-<!--                Formatters 2/2 -->
-<!--                <ref bean="customDateFormatter"/>-->
-<!--                <ref bean="customTimeFormatter"/>-->
-
-                <!-- Formatter factory to define formatters using annotations 2/2 -->
-                <ref bean="customDateTimeFormatAnnotationFormatterFactory"/>
+                <ref bean="customDateFormatter"/>
+                <ref bean="customTimeFormatter"/>
             </set>
         </property>
     </bean>
