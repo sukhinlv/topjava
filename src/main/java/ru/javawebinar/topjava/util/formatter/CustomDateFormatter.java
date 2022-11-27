@@ -15,6 +15,6 @@ public class CustomDateFormatter implements Formatter<LocalDate> {
 
     @Override
     public String print(LocalDate localDate, Locale locale) {
-        return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return localDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 }
