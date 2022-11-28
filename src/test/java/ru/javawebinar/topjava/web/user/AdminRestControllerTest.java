@@ -1,10 +1,14 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
@@ -22,12 +26,16 @@ import static ru.javawebinar.topjava.MealTestData.adminMeal1;
 import static ru.javawebinar.topjava.MealTestData.adminMeal2;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+
 class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + '/';
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Environment env;
 
     @Test
     void get() throws Exception {
@@ -40,10 +48,12 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
+        Assumptions.assumeTrue(env.acceptsProfiles(org.springframework.core.env.Profiles.of(Profiles.DATAJPA)));
+
         User userWithMeals = new User(admin);
         userWithMeals.setMeals(List.of(adminMeal2, adminMeal1));
 
-        perform(MockMvcRequestBuilders.get(REST_URL + "with-meals/" + ADMIN_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID + "/with-meals/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
