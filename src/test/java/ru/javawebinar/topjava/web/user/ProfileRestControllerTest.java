@@ -24,9 +24,6 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private Environment env;
-
     @Test
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
@@ -37,7 +34,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
-        Assumptions.assumeTrue(env.acceptsProfiles(org.springframework.core.env.Profiles.of(Profiles.DATAJPA)));
+        assumeDataJpaProfile();
 
         User userWithMeals = new User(user);
         userWithMeals.setMeals(meals);
