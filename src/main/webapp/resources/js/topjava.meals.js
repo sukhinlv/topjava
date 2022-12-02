@@ -1,15 +1,14 @@
-const mealAjaxUrl = "meals/";
+const mealAjaxUrl = "ui/meals/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl
 };
 
-// $(document).ready(function () {
 $(function () {
     $('#datetimepicker').datetimepicker({
         format: 'd.m.Y H:i',
-        closeOnDateSelect:true,
+        closeOnDateSelect: true,
     });
 
     makeEditable(
@@ -18,7 +17,7 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "date/time"
+                    "data": "dateTime"
                 },
                 {
                     "data": "description"
@@ -44,3 +43,18 @@ $(function () {
         })
     );
 });
+
+function filterTable() {
+    $.ajax({
+        type: "GET",
+        url: ctx.ajaxUrl + 'filter?',
+        data: $('#filterDetails').serialize()
+    }).done(function (data) {
+        updateTableByData(data);
+        successNoty("Filtered");
+    });
+}
+
+function updateTableByData(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}
