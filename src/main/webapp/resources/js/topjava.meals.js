@@ -43,18 +43,3 @@ $(function () {
         })
     );
 });
-
-function filterTable() {
-    $.ajax({
-        type: "GET",
-        url: ctx.ajaxUrl + 'filter?',
-        data: $('#filterDetails').serialize()
-    }).done(function (data) {
-        updateTableByData(data);
-        successNoty("Filtered");
-    });
-}
-
-function updateTableByData(data) {
-    ctx.datatableApi.clear().rows.add(data).draw();
-}

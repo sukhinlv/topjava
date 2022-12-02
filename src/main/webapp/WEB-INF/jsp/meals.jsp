@@ -32,7 +32,7 @@
             <button class="btn btn-primary" type="button" onclick="filterTable()">
                 <spring:message code="meal.filter"/>
             </button>
-            <button class="btn btn-primary" type="reset" onclick="updateTable()">
+            <button class="btn btn-primary" type="reset" onclick="resetFilter()">
                 <spring:message code="meal.filterreset"/>
             </button>
         </form>
