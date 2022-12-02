@@ -2,7 +2,8 @@ const mealAjaxUrl = "ui/meals/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: mealAjaxUrl
+    ajaxUrl: mealAjaxUrl,
+    useFilter: true
 };
 
 $(function () {
