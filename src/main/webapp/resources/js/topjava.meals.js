@@ -1,12 +1,15 @@
+let filterForm
+
 const mealAjaxUrl = "ui/meals/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl,
-    useFilter: true
 };
 
 $(function () {
+    filterForm = $('#filterDetails');
+
     $('#datetimepicker').datetimepicker({
         format: 'd.m.Y H:i',
         closeOnDateSelect: true,
@@ -44,3 +47,19 @@ $(function () {
         })
     );
 });
+
+function resetFilter() {
+    filterForm[0].reset();
+    updateTable();
+}
+
+function updateTable() {
+    $.ajax({
+        type: "GET",
+        url: ctx.ajaxUrl + 'filter',
+        data: filterForm.serialize()
+    }).done(function (data) {
+        updateTableByData(data);
+    });
+    return true;
+}
