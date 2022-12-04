@@ -46,9 +46,10 @@ $(function () {
 });
 
 function changeEnabled(checkbox) {
+    let closestTableRow = $(checkbox).closest('tr');
     $.ajax({
         type: "PATCH",
-        url: ctx.ajaxUrl + $(checkbox).closest('tr').attr("id") + '/enabled?enabled=' + checkbox.checked
+        url: ctx.ajaxUrl + closestTableRow.attr("id") + '/enabled?enabled=' + checkbox.checked
     })
         .done(function () {
             successNoty("User " + (checkbox.checked ? 'enabled' : 'disabled'));
@@ -57,22 +58,6 @@ function changeEnabled(checkbox) {
             checkbox.checked = !checkbox.checked;
         })
         .always(function () {
-            $(checkbox).closest('tr').attr("data-user-enabled", checkbox.checked);
-            refreshCSS();
+            closestTableRow.attr("data-user-enabled", checkbox.checked);
         });
-}
-
-function refreshCSS() {
-    let links = document.getElementsByTagName('link');
-    for (let i = 0; i < links.length; i++) {
-        if (links[i].getAttribute('rel') === 'stylesheet') {
-            let href = links[i].getAttribute('href')
-                .split('?')[0];
-
-            let newHref = href + '?version='
-                + new Date().getMilliseconds();
-
-            links[i].setAttribute('href', newHref);
-        }
-    }
 }

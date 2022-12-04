@@ -2,6 +2,8 @@ let form;
 
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
+    ctx.updateTable = simpleUpdateTable;
+
     form = $('#detailsForm');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
@@ -27,7 +29,7 @@ function deleteRow(id) {
         url: ctx.ajaxUrl + id,
         type: "DELETE"
     }).done(function () {
-        updateTable();
+        ctx.updateTable();
         successNoty("Deleted");
     });
 }
@@ -39,12 +41,12 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        ctx.updateTable();
         successNoty("Saved");
     });
 }
 
-function updateTable() {
+function simpleUpdateTable() {
     $.get(ctx.ajaxUrl, function (data) {
         updateTableByData(data);
     });

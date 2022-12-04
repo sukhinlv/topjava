@@ -5,6 +5,7 @@ const mealAjaxUrl = "ui/meals/";
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl,
+    updateTable: updateFilteredTable,
 };
 
 $(function () {
@@ -50,10 +51,10 @@ $(function () {
 
 function resetFilter() {
     filterForm[0].reset();
-    updateTable();
+    ctx.updateTable();
 }
 
-function updateTable() {
+function updateFilteredTable() {
     $.ajax({
         type: "GET",
         url: ctx.ajaxUrl + 'filter',
@@ -61,5 +62,4 @@ function updateTable() {
     }).done(function (data) {
         updateTableByData(data);
     });
-    return true;
 }
