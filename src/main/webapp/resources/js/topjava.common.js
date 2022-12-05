@@ -2,7 +2,9 @@ let form;
 
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
-    ctx.updateTable = simpleUpdateTable;
+    if (!ctx.updateTable) {
+        ctx.updateTable = simpleUpdateTable;
+    }
 
     form = $('#detailsForm');
     $(".delete").click(function () {
