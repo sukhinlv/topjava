@@ -17,9 +17,49 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (text) {
+            let json = JSON.parse(text);
+            if (typeof json === 'object') {
+                $(json).each(function () {
+                    if (this.hasOwnProperty('dateTime')) {
+                        this.dateTime = formatDate(new Date(this.dateTime));
+                    }
+                });
+            }
+            return json;
+        }
+    }
+});
+
 $(function () {
     $('#datetimepicker').datetimepicker({
-        format: 'd.m.Y H:i',
+        format: 'Y-m-d H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#startTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#endTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#startDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d',
+        closeOnDateSelect: true,
+    });
+
+    $('#endDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d',
         closeOnDateSelect: true,
     });
 
@@ -34,12 +74,6 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (data, type, row) {
-                        if (type === "display") {
-                            return formatDate(new Date(data));
-                        }
-                        return data;
-                    }
                 },
                 {
                     "data": "description"
