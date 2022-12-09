@@ -18,6 +18,11 @@ function clearFilter() {
 }
 
 $(function () {
+    $('#datetimepicker').datetimepicker({
+        format: 'd.m.Y H:i',
+        closeOnDateSelect: true,
+    });
+
     makeEditable(
         $("#datatable").DataTable({
             "paging": false,
