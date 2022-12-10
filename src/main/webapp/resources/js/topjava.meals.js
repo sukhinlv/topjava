@@ -39,28 +39,54 @@ $(function () {
         closeOnDateSelect: true,
     });
 
-    $('#startTime').datetimepicker({
+    let startTime = $('#startTime');
+    let endTime = $('#endTime');
+
+    startTime.datetimepicker({
         datepicker: false,
         format: 'H:i',
         closeOnDateSelect: true,
+        onShow: function (ct) {
+            this.setOptions({
+                maxTime: endTime.val() ? endTime.val() : false
+            })
+        }
     });
 
-    $('#endTime').datetimepicker({
+    endTime.datetimepicker({
         datepicker: false,
         format: 'H:i',
         closeOnDateSelect: true,
+        onShow: function (ct) {
+            this.setOptions({
+                minTime: startTime.val() ? startTime.val() : false
+            })
+        }
     });
 
-    $('#startDate').datetimepicker({
+    let startDate = $('#startDate');
+    let endDate = $('#endDate');
+
+    startDate.datetimepicker({
         timepicker: false,
         format: 'Y-m-d',
         closeOnDateSelect: true,
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: endDate.val() ? endDate.val() : false
+            })
+        }
     });
 
-    $('#endDate').datetimepicker({
+    endDate.datetimepicker({
         timepicker: false,
         format: 'Y-m-d',
         closeOnDateSelect: true,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: startDate.val() ? startDate.val() : false
+            })
+        }
     });
 
     makeEditable(
@@ -99,7 +125,7 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                    $(row).attr("data-meal-excess", data.excess);
+                $(row).attr("data-meal-excess", data.excess);
             }
         })
     );
