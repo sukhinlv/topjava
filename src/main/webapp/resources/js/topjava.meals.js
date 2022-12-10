@@ -24,7 +24,7 @@ $.ajaxSetup({
             if (typeof json === 'object') {
                 $(json).each(function () {
                     if (this.hasOwnProperty('dateTime')) {
-                        this.dateTime = formatDate(new Date(this.dateTime));
+                        this.dateTime = this.dateTime.slice(0, 16).replace('T', ' ');
                     }
                 });
             }

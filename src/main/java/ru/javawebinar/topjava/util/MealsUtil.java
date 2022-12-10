@@ -43,7 +43,7 @@ public class MealsUtil {
     }
 
     public static Meal createNewFromRequestTo(MealRequestTo mealRequestTo) {
-        return new Meal(null, mealRequestTo.getDateTime(), mealRequestTo.getDescription().toLowerCase(), mealRequestTo.getCalories());
+        return new Meal(null, mealRequestTo.getDateTime(), mealRequestTo.getDescription(), mealRequestTo.getCalories());
     }
 
     public static Meal fromRequestTo(MealRequestTo mealRequestTo) {
