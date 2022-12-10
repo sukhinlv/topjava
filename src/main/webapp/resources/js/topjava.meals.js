@@ -124,6 +124,9 @@ $(function () {
                     "desc"
                 ]
             ],
+            "language": {
+                "sSearch": i18n["common.search"],
+            },
             "createdRow": function (row, data, dataIndex) {
                 $(row).attr("data-meal-excess", data.excess);
             }

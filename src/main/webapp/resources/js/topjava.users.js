@@ -84,6 +84,9 @@ $(function () {
                     "asc"
                 ]
             ],
+            "language": {
+                "sSearch": i18n["common.search"],
+            },
             "createdRow": function (row, data, dataIndex) {
                 if (!data.enabled) {
                     $(row).attr("data-user-enabled", false);
