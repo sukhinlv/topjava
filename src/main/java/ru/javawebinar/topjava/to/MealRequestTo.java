@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class MealRequestTo extends BaseTo {
 
@@ -19,6 +18,7 @@ public class MealRequestTo extends BaseTo {
     private final String description;
 
     @Range(min = 10, max = 5000)
+    @NotNull
     private final Integer calories;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories"})
@@ -39,19 +39,6 @@ public class MealRequestTo extends BaseTo {
 
     public Integer getCalories() {
         return calories;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MealRequestTo that = (MealRequestTo) o;
-        return dateTime.equals(that.dateTime) && description.equals(that.description) && calories.equals(that.calories);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dateTime, description, calories);
     }
 
     @Override

@@ -112,7 +112,6 @@
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 <script type="text/javascript">
-    const i18n = [];
     <jsp:include page="fragments/i18n.jsp">
         <jsp:param name="titlePrefix" value="meal" />
     </jsp:include>
