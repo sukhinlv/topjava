@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.hamcrest.core.AllOf;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,8 +15,7 @@ import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.web.user.ProfileRestController.REST_URL;
@@ -85,5 +86,40 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_WITH_MEALS_MATCHER.contentJson(user));
+    }
+
+    @Test
+    void unprocessableRegisterNew() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(new UserTo(null, null, null, null, 0))))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.detail", AllOf.allOf(
+                        StringContains.containsString("[name] must not be blank"),
+                        StringContains.containsString("[caloriesPerDay] must be between 10 and 10000"),
+                        StringContains.containsString("[email] must not be blank"),
+                        StringContains.containsString("[password] must not be blank")
+                )));
+    }
+
+    @Test
+    void unprocessableUpdate() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(new UserTo(null, null, null, null, 0))))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.detail", AllOf.allOf(
+                        StringContains.containsString("[name] must not be blank"),
+                        StringContains.containsString("[caloriesPerDay] must be between 10 and 10000"),
+                        StringContains.containsString("[email] must not be blank"),
+                        StringContains.containsString("[password] must not be blank")
+                )));
     }
 }

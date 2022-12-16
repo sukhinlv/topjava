@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.web.meal;
 
 
+import org.hamcrest.core.AllOf;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,8 +16,7 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -123,5 +124,37 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(user)))
                 .andExpect(status().isOk())
                 .andExpect(TO_MATCHER.contentJson(getTos(meals, user.getCaloriesPerDay())));
+    }
+
+    @Test
+    void unprocessableNewMeal() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(new Meal(null, null, null, 0))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.detail", AllOf.allOf(
+                        StringContains.containsString("[dateTime] must not be null"),
+                        StringContains.containsString("[calories] must be between 10 and 5000"),
+                        StringContains.containsString("[description] must not be blank")
+                )));
+    }
+
+    @Test
+    void unprocessableUpdateMeal() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(new Meal(null, null, null, 0))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL + MEAL1_ID))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.detail", AllOf.allOf(
+                        StringContains.containsString("[dateTime] must not be null"),
+                        StringContains.containsString("[calories] must be between 10 and 5000"),
+                        StringContains.containsString("[description] must not be blank")
+                )));
     }
 }
