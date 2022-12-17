@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.web.validator.UserToValidator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -14,8 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController extends AbstractUserController {
-
     static final String REST_URL = "/rest/admin/users";
+
+    protected AdminRestController(UserService service, UserToValidator userToValidator) {
+        super(service, userToValidator);
+    }
 
     @Override
     @GetMapping
