@@ -36,7 +36,7 @@ public class UserToValidator implements org.springframework.validation.Validator
         UserTo userTo = (UserTo) target;
         User userByEmail = userRepository.getByEmail(userTo.getEmail());
         if (userByEmail != null && !Objects.equals(userByEmail.getId(), userTo.getId())) {
-            errors.rejectValue("email", "", "User with this email already exists");
+            errors.rejectValue("email", "user.already.registered", "User with this email already exists");
         }
     }
 }
