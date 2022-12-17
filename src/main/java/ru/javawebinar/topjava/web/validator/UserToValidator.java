@@ -24,7 +24,7 @@ public class UserToValidator implements org.springframework.validation.Validator
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return UserTo.class.isAssignableFrom(clazz);
+        return UserTo.class.isAssignableFrom(clazz) || User.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -33,9 +33,18 @@ public class UserToValidator implements org.springframework.validation.Validator
         validator.validate(target, errors);
 
         // custom rules
-        UserTo userTo = (UserTo) target;
-        User userByEmail = userRepository.getByEmail(userTo.getEmail());
-        if (userByEmail != null && !Objects.equals(userByEmail.getId(), userTo.getId())) {
+        String email;
+        Integer id;
+        if (UserTo.class.isAssignableFrom(target.getClass())) {
+            email = ((UserTo) target).getEmail();
+            id = ((UserTo) target).getId();
+        } else {
+            email = ((User) target).getEmail();
+            id = ((User) target).getId();
+        }
+
+        User userByEmail = userRepository.getByEmail(email);
+        if (userByEmail != null && !Objects.equals(userByEmail.getId(), id)) {
             errors.rejectValue("email", "user.already.registered", "User with this email already exists");
         }
     }
