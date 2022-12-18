@@ -7,20 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
-import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.web.SecurityUtil;
-import ru.javawebinar.topjava.web.validator.UserToValidator;
 
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileUIController extends AbstractUserController {
-    protected ProfileUIController(UserService service, UserToValidator userToValidator) {
-        super(service, userToValidator);
-    }
-
     @GetMapping
     public String profile() {
         return "profile";
