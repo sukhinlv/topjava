@@ -9,7 +9,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UsersUtil;
-import ru.javawebinar.topjava.web.validator.UserToValidator;
+import ru.javawebinar.topjava.web.validator.UserRegisteredValidator;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ public abstract class AbstractUserController {
     @Autowired
     private UserService service;
     @Autowired
-    private UserToValidator userToValidator;
+    private UserRegisteredValidator userRegisteredValidator;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.setValidator(userToValidator);
+        binder.addValidators(userRegisteredValidator);
     }
 
     public List<User> getAll() {

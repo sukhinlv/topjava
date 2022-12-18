@@ -12,12 +12,12 @@ import java.util.Objects;
 // https://stackoverflow.com/questions/26501348/how-to-combine-jsr-303-and-spring-validator-class-in-a-service-layer/26733582#26733582
 // https://habr.com/ru/post/424819/
 @Component
-public class UserToValidator implements org.springframework.validation.Validator {
+public class UserRegisteredValidator implements org.springframework.validation.Validator {
 
     private final UserRepository userRepository;
     private final SpringValidatorAdapter validator;
 
-    public UserToValidator(UserRepository userRepository, SpringValidatorAdapter validator) {
+    public UserRegisteredValidator(UserRepository userRepository, SpringValidatorAdapter validator) {
         this.userRepository = userRepository;
         this.validator = validator;
     }
@@ -29,10 +29,6 @@ public class UserToValidator implements org.springframework.validation.Validator
 
     @Override
     public void validate(Object target, Errors errors) {
-        // jsr303
-        validator.validate(target, errors);
-
-        // custom rules
         String email;
         Integer id;
         if (UserTo.class.isAssignableFrom(target.getClass())) {
