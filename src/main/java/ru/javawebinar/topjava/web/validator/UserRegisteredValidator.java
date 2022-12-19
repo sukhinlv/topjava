@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.web.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.UserTo;
@@ -15,11 +14,9 @@ import java.util.Objects;
 public class UserRegisteredValidator implements org.springframework.validation.Validator {
 
     private final UserRepository userRepository;
-    private final SpringValidatorAdapter validator;
 
-    public UserRegisteredValidator(UserRepository userRepository, SpringValidatorAdapter validator) {
+    public UserRegisteredValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.validator = validator;
     }
 
     @Override
