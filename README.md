@@ -3,40 +3,96 @@
 Java Enterprise Online Project
 ===============================
 
-Наиболее востребованные технологии /инструменты / фреймворки Java Enterprise:
-Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery + plugins.
+[Демо разрабатываемого приложения](https://jsft.ru/topjava/)
 
-- [Вступительное занятие](https://github.com/JavaOPs/topjava)
-- [Описание и план проекта](https://github.com/JavaOPs/topjava/blob/master/description.md)
-- [Wiki](https://github.com/JavaOPs/topjava/wiki)
-- [Wiki Git](https://github.com/JavaOPs/topjava/wiki/Git)
-- [Wiki IDEA](https://github.com/JavaOPs/topjava/wiki/IDEA)
-- [Демо разрабатываемого приложения](http://topjava.herokuapp.com/)
+[Выпускной проект](https://github.com/sukhinlv/voteforlunch)
 
-### 29.09: Старт проекта
-- Начало проверки [вступительного задания](https://github.com/JavaOPs/topjava#-Домашнее-задание-hw0)
+#### Разработка полнофункционального Spring/JPA Enterprise приложения c авторизацией и правами доступа на основе ролей с использованием наиболее популярных инструментов и технологий Java: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css, js), DataTables, jQuery + plugins, Java 8 Stream and Time API и сохранением в базах данных PostgreSQL и HSQLDB.
 
-####  04.10 Дедлайн на сдачу HW0
-### 06.10: 1-е занятие
-####  13.10 Дедлайн подачи заявки на [дипломную программу](https://javaops.ru/view/register/diploma)
-- Разбор домашнего задания вступительного занятия (вместе с Optional)
+- Основное внимание будет уделяться способам решения многочисленных проблем разработки в Spring/JPA, а также структурному (красивому и надежному) java-кодированию и архитектуре приложения.
+- Каждая итерация проекта закрепляется домашним заданием по реализации схожей функциональности. Следующее занятие начинается с разбора домашних заданий.
+- Большое внимание уделяется тестированию кода: в проекте более 100 JUnit-тестов.
+- Несмотря на относительно небольшой размер, приложение разрабатывается с нуля как большой проект: например, используем кэш 2-го уровня Hibernate, настраиваем Jackson для работы с ленивой загрузкой Hibernate, делаем конвертеры для типов LocalDateTime (Java 8 time API).
+- Разбираются архитектурные паттерны: слои приложения и как правильно разбивать логику по слоям, когда нужно применять Data Transfer Object. То есть на выходе получается не учебный проект, а хорошо масштабируемый шаблон для большого проекта на всех пройденных технологиях.
+- Большое внимание уделяется деталям: популяция базы данных, использование транзакционности, тесты сервисов и REST-контроллеров, настройка EntityManagerFactory, выбор реализации пула коннектов. Особое внимание уделяется работе с базой данных: через Spring JDBC, Spring ORM и Spring Data Jpa.
+- Используются самые востребованные на сегодняшний момент фреймворки: Maven, Spring Security 4 вместе с Spring Security Test, наиболее удобный для работы с базой проекта Spring Data Jpa, библиотека логирования Logback, реализующая SLF4J, повсеместно используемый Bootstrap и jQuery.
+
+### План проекта:
+#### Архитектура проекта. Персистентность.
+- Системы управления версиями
+- Java 8: Lambda, Stream API
+- Обзор используемых в проекте технологий и инструментов.
+- Инструмент сборки Maven
+- WAR. Веб-контейнер Tomcat. Сервлеты.
+- Логирование.
+- Обзор стандартных библиотек. Apache Commons, Guava
+- Слои приложения. Создание каркаса приложения.
+- Обзор Spring Framework. Spring Context.
+- Тестирование через JUnit.
+- Spring Test
+- Базы данных. PostgreSQL. Обзор NoSQL и Java persistence solution без ORM.
+- Настройка Database в IDEA.
+- Скрипты инициализации базы. Spring Jdbc Template.
+- Spring: инициализация и популирование БД
+- ORM. Hibernate. JPA.
+- Тестирование JPA-сервиса через AssertJ
+- Поддержка HSQLDB
+- Транзакции
+- Профили Maven и Spring
+- Пул коннектов
+- Spring Data JPA
+- Кэш Hibernate
+
+#### Разработка WEB
+- Spring кэш
+- Spring Web
+- JSP, JSTL, i18n
+- Tomcat maven plugin. JNDI
+- Spring Web MVC
+- Spring Internationalization
+- Тестирование Spring MVC
+- REST-контроллеры
+- Тестирование REST-контроллеров. Jackson.
+- jackson-datatype-hibernate. Тестирование через матчеры.
+- Тестирование через SoapUi. UTF-8
+- WebJars.
+- Bootstrap. jQuery datatables.
+- AJAX. jQuery. Notifications.
+- Spring Security
+- Spring Binding/Validation
+- Работа с DataTables через Ajax.
+- Spring Security Test
+- Кастомизация JSON (@JsonView) и валидации (groups)
+- Encoding password
+- CSRF (добавление в проект защиты от межсайтовой подделки запроса)
+- form-login. Spring Security Taglib
+- Handler interceptor
+- Spring Exception Handling
+- Смена локали
+- Фильтрация JSON с помощью @JsonView
+- Защита от XSS (Cross Site Scripting)
+- Деплой на собственный выделенный сервер
+- Локализация datatables, ошибок валидации
+- Обработка ошибок 404 (NotFound)
+- Доступ к AuthorizedUser
+
+
+### План по веткам Git
+####  HW0 - вступительное задание
+####  HW1
 - Обзор используемых в проекте технологий. Интеграция ПО
 - Maven
 - WAR. Веб-контейнер Tomcat. Сервлеты
 - Логирование
 - Уровни и зависимости логгирования. JMX
-- Домашнее задание 1-го занятия (HW1 + Optional)
 
-### 13.10: 2-е занятие
-- Разбор домашнего задания HW1 + Optional
+#### HW2
 - Библиотека vs Фреймворк. Стандартные библиотеки Apache Commons, Guava
 - Слои приложения. Создание каркаса приложения
 - Обзор Spring Framework. Spring Context
 - Пояснения к HW2. Обработка Autowired
-- Домашнее задание (HW2 + Optional)
 
-### 20.10: 3-е занятие
-- Разбор домашнего задания HW2 + Optional
+#### HW3
 - Жизненный цикл Spring контекста
 - Тестирование через JUnit
 - Spring Test
@@ -46,19 +102,15 @@ Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery +
 - Скрипты инициализации базы. Spring Jdbc Template
 - Тестирование UserService через AssertJ
 - Логирование тестов
-- Домашнее задание (HW3 + Optional)
 
-### 27.10: 4-е занятие
-- Разбор домашнего задания HW3 + Optional
+#### HW4
 - Методы улучшения качества кода
 - Spring: инициализация и популирование DB
 - Подмена контекста при тестировании
 - ORM. Hibernate. JPA
 - Поддержка HSQLDB
-- Домашнее задание (HW4 + Optional)
-#### Начало выполнения [выпускного проекта](https://github.com/JavaOPs/topjava/blob/master/graduation.md)
 
-### 01.11: 5-е занятие
+#### HW5
 - Обзор JDK 9/17. Миграция Topjava с 1.8 на 17
 - Разбор вопросов
 - Разбор домашнего задания HW4 + Optional
@@ -67,10 +119,8 @@ Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery +
 - Пул коннектов
 - Spring Data JPA
 - Spring кэш
-- Домашнее задание (HW5 + Optional)
 
-### 10.11: 6-е занятие
-- Разбор домашнего задания HW5 + Optional
+#### HW6
 - Кэш Hibernate
 - Spring Web
 - JSP, JSTL, internationalization
@@ -78,12 +128,8 @@ Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery +
 - Конфигурирование Tomcat через maven plugin. Jndi-lookup
 - Spring Web MVC
 - Spring Internationalization
-- Домашнее задание (HW6 + Optional)
 
-#### Большое ДЗ + выпускной проект + начинаем [курс BootJava](https://javaops.ru/view/bootjava) + подтягиваем "хвосты".
-
-### 24.11: 7-е занятие
-- Разбор домашнего задания HW6 + Optional
+#### HW7
 - Автогенерация DDL по модели
 - Тестирование Spring MVC
 - Миграция на JUnit 5
@@ -91,59 +137,39 @@ Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery +
 - Тестирование REST контроллеров. Jackson
 - jackson-datatype-hibernate. Тестирование через матчеры
 - Тестирование через SoapUi. UTF-8
-- Домашнее задание (HW7 + Optional)
 
-### 01.12: 8-е занятие
-- Разбор домашнего задания HW7 + Optional
+#### HW8
 - WebJars. jQuery и JavaScript frameworks
 - Bootstrap
 - AJAX. Datatables. jQuery
 - jQuery notifications plugin
 - Добавление Spring Security
-- Домашнее задание (HW8 + Optional)
 
-### 08.12: 9-е занятие
-- Разбор домашнего задания HW8 + Optional
+#### HW9
 - Spring Binding
 - Spring Validation
 - Перевод DataTables на Ajax
 - Форма login / logout
-- Реализация собственного провайдера авторицазии
+- Реализация собственного провайдера авторизации
 - Принцип работы Spring Security. Проксирование
 - Spring Security Test
 - Cookie. Session
-- Домашнее задание (HW9 + Optional)
 
-### 15.12: 10-е занятие
-- Разбор домашнего задания HW10 + Optional
+#### HW10
 - Кастомизация JSON (@JsonView) и валидации (groups)
 - Рефакторинг: jQuery конверторы и группы валидации по умолчанию
 - Spring Security Taglib. Method Security Expressions
-- Интерсепторы. Редактирование профиля. JSP tag files
+- Интерцепторы. Редактирование профиля. JSP tag files
 - Форма регистрации
 - Обработка исключений в Spring
 - Encoding password
 - Миграция на Spring 5
 - Защита от межсайтовой подделки запросов (CSRF)
-- Домашнее задание (HW10)
 
-### 22.12: 11-е занятие
-- Разбор домашнего задания HW10 + Optional
+#### HW11
 - Локализация datatables, ошибок валидации
 - Защита от XSS (Cross Site Scripting)
 - Обработка ошибок 404 (NotFound)
 - Доступ к AuthorizedUser
 - Ограничение модификации пользователей
-- Деплой [приложения в Heroku](http://topjava.herokuapp.com)
-- Собеседование. Разработка ПО
-- Возможные доработки приложения
-- Домашнее задание по проекту: составление резюме
-
-### 26.12: Миграция на Spring-Boot
-- Основы Spring Boot. Spring Boot maven plugin
-- Lombok, база H2, ApplicationRunner
-- Spring Data REST + HATEOAS
-- Миграция приложения подсчета калорий на Spring Boot
-
-### 15.01.23: Дедлайн на сдачу [выпускного проекта](https://github.com/JavaOPs/topjava/blob/master/graduation.md)
-### 25.01.23: Получение дипломов для участников [Дипломной программы](https://javaops.ru/view/register/diploma)
+- Деплой 
